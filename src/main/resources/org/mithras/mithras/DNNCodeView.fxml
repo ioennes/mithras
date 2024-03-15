@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/21.0.1"
+            fx:controller="org.mithras.mithras.DNNCodeView">
+    <children>
+        <ListView fx:id="code" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0"
+                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <HBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#switchToNNLS" text="Switch To Layer Selection"/>
+                <Button mnemonicParsing="false" onAction="#switchToMain" text="Back"/>
+            </children>
+            <padding>
+                <Insets bottom="25.0"/>
+            </padding>
+        </HBox>
+    </children>
+</AnchorPane>

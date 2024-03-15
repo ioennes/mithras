@@ -1,0 +1,132 @@
+{
+    "model_name": "dnn0",
+    "layers": [
+        {
+            "Input": {
+                "shape": [
+                    32,
+                    32,
+                    2
+                ],
+                "dtype": "float32",
+                "sparse": false,
+                "name": "input"
+            }
+        },
+        {
+            "Dense": {
+                "trainable": true,
+                "dtype": "float32",
+                "units": 32,
+                "activation": "relu",
+                "use_bias": true,
+                "kernel_initializer": "GlorotUniform(seed=None)",
+                "bias_initializer": "Zeros()",
+                "kernel_regularizer": null,
+                "bias_regularizer": null,
+                "activity_regularizer": null,
+                "kernel_constraint": null,
+                "bias_constraint": null
+            }
+        },
+        {
+            "Dense": {
+                "trainable": true,
+                "dtype": "float32",
+                "units": 32,
+                "activation": "relu",
+                "use_bias": true,
+                "kernel_initializer": "GlorotUniform(seed=None)",
+                "bias_initializer": "Zeros()",
+                "kernel_regularizer": null,
+                "bias_regularizer": null,
+                "activity_regularizer": null,
+                "kernel_constraint": null,
+                "bias_constraint": null
+            }
+        },
+        {
+            "Dense": {
+                "trainable": true,
+                "dtype": "float32",
+                "units": 10,
+                "activation": "softmax",
+                "use_bias": true,
+                "kernel_initializer": "GlorotUniform(seed=None)",
+                "bias_initializer": "Zeros()",
+                "kernel_regularizer": null,
+                "bias_regularizer": null,
+                "activity_regularizer": null,
+                "kernel_constraint": null,
+                "bias_constraint": null
+            }
+        }
+    ]
+}
+
+{
+    "model_name": "dnn1",
+    "layers": [
+        {
+            "Input": {
+                "shape": [
+                    32,
+                    64,
+                    2
+                ],
+                "dtype": "float32",
+                "sparse": false,
+                "name": "input"
+            }
+        },
+        {
+            "Dense": {
+                "trainable": true,
+                "dtype": "float32",
+                "units": 32,
+                "activation": "relu",
+                "use_bias": true,
+                "kernel_initializer": "GlorotUniform(seed=None)",
+                "bias_initializer": "Zeros()",
+                "kernel_regularizer": null,
+                "bias_regularizer": null,
+                "activity_regularizer": null,
+                "kernel_constraint": null,
+                "bias_constraint": null
+            }
+        },
+        {
+            "Dense": {
+                "trainable": true,
+                "dtype": "float32",
+                "units": 32,
+                "activation": "relu",
+                "use_bias": true,
+                "kernel_initializer": "GlorotUniform(seed=None)",
+                "bias_initializer": "Zeros()",
+                "kernel_regularizer": null,
+                "bias_regularizer": null,
+                "activity_regularizer": null,
+                "kernel_constraint": null,
+                "bias_constraint": null
+            }
+        },
+        {
+            "Dense": {
+                "trainable": true,
+                "dtype": "float32",
+                "units": 10,
+                "activation": "softmax",
+                "use_bias": true,
+                "kernel_initializer": "GlorotUniform(seed=None)",
+                "bias_initializer": "Zeros()",
+                "kernel_regularizer": null,
+                "bias_regularizer": null,
+                "activity_regularizer": null,
+                "kernel_constraint": null,
+                "bias_constraint": null
+            }
+        }
+    ]
+}
+

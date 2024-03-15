@@ -1,0 +1,104 @@
+.scroll-pane {
+    -fx-background-color: #000000;
+}
+
+Text {
+    -fx-font-smoothing-type: lcd;
+    -fx-fill: white;
+    -fx-font-size: 13pt;
+    -fx-font-family: "Arial";
+}
+
+.layerListBtn {
+    -fx-background-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-font-family: "Arial";
+    -fx-background-radius: 0;
+    -fx-border-radius: 5em;
+    -fx-border-color: rgba(255, 255, 255, 0.73);
+    -fx-border-width: 1px;
+    -fx-padding: 5px 10px 5px 10px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+    -fx-min-width: 100px;
+}
+
+.button {
+    -fx-background-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+    -fx-font-family: "Arial";
+    -fx-background-radius: 5em; /* Match this with -fx-border-radius if you want rounded corners */
+    -fx-border-radius: 5em;
+    -fx-border-color: rgba(255, 255, 255, 0.73);
+    -fx-border-width: 1px;
+    -fx-padding: 5px 10px 5px 10px;
+    -fx-border-insets: 0; /* Typically, this should be 0 unless you want to offset the border from the edge */
+    -fx-end-margin: 10px;
+    -fx-start-margin: 10px;
+    -fx-background-insets: 0; /* This should be 0 to ensure the background fills the button */
+}
+
+.button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-insets: 1px; /* This should be equal to your border-width to keep the hover inside */
+}
+
+.text-area, .text-field {
+    -fx-control-inner-background: #000000;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: transparent transparent white transparent;
+    -fx-border-width: -1px -1px 2px -1px;
+    -fx-border-radius: 0px;
+    -fx-border-style: solid;
+    -fx-text-alignment: left;
+    -fx-alignment: baseline-left;
+    -fx-font-size: 18;
+    -fx-border-insets: -1;
+    -fx-background-insets: 5;
+    -fx-effect: none;
+    -fx-background-radius: 0;
+    -fx-text-box-border: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+}
+
+.text-area:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-area .content {
+    -fx-background-radius: 0;
+}
+
+.text-area .scroll-bar:vertical {
+    -fx-pref-width: 1;
+    -fx-opacity: 0;
+}
+
+.text-area .scroll-bar:horizontal {
+    -fx-pref-height: 1;
+    -fx-opacity: 0;
+}
+
+.card {
+    -fx-background-color: black;
+    -fx-border-color: gray;
+    -fx-border-radius: 3em;
+    -fx-border-width: 2px;
+}
+
+.list-view {
+    -fx-background-color: black;
+}
+
+.list-cell {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}

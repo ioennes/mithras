@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="1000.0" prefWidth="1200.0" style="-fx-background-color: black;"
+           xmlns="http://javafx.com/javafx/21.0.1" fx:controller="org.mithras.mithras.CreateDNN">
+    <children>
+        <Group>
+            <children>
+                <Text fx:id="modelname" fill="WHITE" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Enter Neural Network Name">
+                    <font>
+                        <Font name="System Bold" size="24.0"/>
+                    </font>
+                </Text>
+                <TextField fx:id="nnname" layoutX="38.0" layoutY="60.0" maxWidth="255.0" prefColumnCount="1"
+                           prefHeight="24.0" prefWidth="255.0"/>
+                <Text fx:id="modelname1" fill="WHITE" layoutX="7.0" layoutY="125.0" strokeType="OUTSIDE"
+                      strokeWidth="0.0" text="Enter Neural Network Type">
+                    <font>
+                        <Font name="System Bold" size="24.0"/>
+                    </font>
+                </Text>
+                <ComboBox fx:id="dnntype" layoutX="15.0" layoutY="150.0" prefWidth="300.0"/>
+            </children>
+        </Group>
+        <Button mnemonicParsing="false" onAction="#saveDNN" text="Save Model" StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="25.0" right="90.0"/>
+            </StackPane.margin>
+        </Button>
+        <Button mnemonicParsing="false" text="Cancel" StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="25.0" left="90.0"/>
+            </StackPane.margin>
+        </Button>
+    </children>
+</StackPane>

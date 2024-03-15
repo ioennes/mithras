@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.mithras.mithras.MainController">
+    <children>
+        <GridPane fx:id="cardgrid" hgap="6.0" vgap="6.0" StackPane.alignment="TOP_CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <columnConstraints>
+                <ColumnConstraints />
+            <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+            <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+        <Button fx:id="datasetbtn" mnemonicParsing="false" onAction="#openFileBrowser" style="-fx-background-radius: 5em;" text="+" StackPane.alignment="BOTTOM_LEFT">
+            <StackPane.margin>
+                <Insets bottom="25.0" left="25.0" />
+            </StackPane.margin>
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Button>
+        <Button alignment="BOTTOM_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#switchToModelSelection" text="Create Model" StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="25.0" />
+            </StackPane.margin>
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Button>
+      <Button fx:id="datasetbtn1" mnemonicParsing="false" onAction="#openTranscriber" style="-fx-background-radius: 5em;" text="C" StackPane.alignment="BOTTOM_RIGHT">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="25.0" right="25.0" />
+         </StackPane.margin>
+      </Button>
+      <Button fx:id="datasetbtn2" mnemonicParsing="false" onAction="#openImporter" style="-fx-background-radius: 5em;" text="Import Models" StackPane.alignment="BOTTOM_LEFT">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="25.0" left="80.0" />
+         </StackPane.margin>
+      </Button>
+    </children>
+</StackPane>
