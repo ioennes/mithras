@@ -52,7 +52,7 @@ public class SceneManager
 
     public static void switchToDNNView(String modelName) throws IOException
     {
-        DNNView dnnv = new DNNView();
+        NeuralNetworkView dnnv = new NeuralNetworkView();
         dnnv.initializeScene(primaryStage, modelName);
     }
 
@@ -95,7 +95,7 @@ public class SceneManager
         if (file != null)
         {
             String filePath = file.getAbsolutePath();
-            Communicator.extractModels(file.toPath());
+            ModelExtractor.extractModels(file.toPath());
         }
     }
 }

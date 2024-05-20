@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class DNNView
+public class NeuralNetworkView
 {
     private final int unitThreshold = 8;
     private final int whThreshold = 80;

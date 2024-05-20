@@ -92,28 +92,28 @@ public class DatasetHandler
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("train = tf.keras.preprocessing.image_dataset_from_directory(");
-        sb.append("    \"" + (trainPath == null ? "ENTER_PATH" : trainPath.toString()) + "\",");
-        sb.append("    image_size=(" + x + ", " + y + "))");
-        sb.append("train = train.prefetch(tf.data.AUTOTUNE)");
+        sb.append("train = tf.keras.preprocessing.image_dataset_from_directory(\n");
+        sb.append("    \"" + (trainPath == null ? "ENTER_PATH" : trainPath.toString()) + "\",\n");
+        sb.append("    image_size=(" + x + ", " + y + "))\n");
+        sb.append("train = train.prefetch(tf.data.AUTOTUNE)\n");
 
         if (testPath == null)
         {
             return sb.toString();
         }
-        sb.append("test = tf.keras.preprocessing.image_dataset_from_directory(");
-        sb.append("    \"" + testPath.toString() + "\",");
-        sb.append("    image_size=(" + x + ", " + y + "))");
-        sb.append("test = test.prefetch(tf.data.AUTOTUNE)");
+        sb.append("test = tf.keras.preprocessing.image_dataset_from_directory(\n");
+        sb.append("    \"" + testPath.toString() + "\",\n");
+        sb.append("    image_size=(" + x + ", " + y + "))\n");
+        sb.append("test = test.prefetch(tf.data.AUTOTUNE)\n");
 
         if (validPath == null)
         {
             return sb.toString();
         }
-        sb.append("valid = tf.keras.preprocessing.image_dataset_from_directory(");
-        sb.append("    \"" + validPath.toString() + "\",");
-        sb.append("    image_size=(" + x + ", " + y + "))");
-        sb.append("valid = valid.prefetch(tf.data.AUTOTUNE)");
+        sb.append("valid = tf.keras.preprocessing.image_dataset_from_directory(\n");
+        sb.append("    \"" + validPath.toString() + "\",\n");
+        sb.append("    image_size=(" + x + ", " + y + "))\n");
+        sb.append("valid = valid.prefetch(tf.data.AUTOTUNE)\n\n");
 
         return sb.toString();
     }

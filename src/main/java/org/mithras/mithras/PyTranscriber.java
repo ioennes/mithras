@@ -29,9 +29,10 @@ public class PyTranscriber
         }
     }
 
-    private static void writeImports(StringBuilder sb)
+    public static void writeImports(StringBuilder sb)
     {
         sb.append("import tensorflow as tf").append("\n");
+        sb.append("import matplotlib.pyplot as plt").append("\n");
         sb.append("from tensorflow.keras import models, layers").append("\n");
         sb.append("from sklearn.tree import *").append("\n");
         sb.append("from sklearn.svm import *").append("\n");
@@ -42,7 +43,7 @@ public class PyTranscriber
 
     private static void writeDataset(StringBuilder sb)
     {
-        DatasetHandler.preprocessImageFolder(x_dim, y_dim);
+        sb.append(DatasetHandler.preprocessImageFolder(x_dim, y_dim));
     }
 
     private static void writeModels(StringBuilder sb)

@@ -10,6 +10,10 @@ import org.mithras.structures.SVMModel;
 import org.mithras.structures.State;
 import org.mithras.structures.TreeModel;
 
+import javax.sound.sampled.Clip;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 
 /**
@@ -136,6 +140,17 @@ public class Card extends StackPane
                 throw new RuntimeException(ex);
             }
         });
+
+        Button copy = (Button) root.lookup("#copybtn");
+        copy.setOnAction(e -> {
+            try
+            {
+                copy();
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     /**
@@ -209,6 +224,17 @@ public class Card extends StackPane
         {
             SceneManager.switchToDNNView(modelName);
         }
+    }
+
+    public void copy() throws IOException
+    {
+        StringBuilder sb = new StringBuilder();
+        PyTranscriber.writeImports(sb);
+        sb.append("\n");
+        sb.append(ModelManager.models.get(modelName).toString());
+        StringSelection selection = new StringSelection(sb.toString());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
     }
 
     /**

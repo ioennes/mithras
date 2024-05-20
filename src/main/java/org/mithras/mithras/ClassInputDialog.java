@@ -48,12 +48,12 @@ public class ClassInputDialog<T>
      *
      * @param object The object whose parameters are to be inputted
      */
-    public void start(T object, String modelName, int index)
+    public void start(T object, String objName, int index)
     {
         try
         {
             this.object = object;
-            this.model = ModelManager.models.get(modelName);
+            this.model = ModelManager.models.get(objName);
             this.index = index;
 
             initialize(object);

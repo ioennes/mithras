@@ -3,7 +3,6 @@ package org.mithras.mithras;
 import org.mithras.structures.DNNDeserializer;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
-public class Communicator
+public class ModelExtractor
 {
     private static Path path;
 
