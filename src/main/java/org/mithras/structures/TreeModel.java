@@ -8,7 +8,7 @@ import static org.mithras.structures.StringComposer.compose;
 public class TreeModel extends Model
 {
     private final Tree tree;
-    private ConfigData configData = new ConfigData();
+    private final ConfigData configData = new ConfigData();
 
     public TreeModel(String name, Tree tree)
     {
@@ -22,7 +22,9 @@ public class TreeModel extends Model
         StringBuilder s = new StringBuilder();
         s.append(getName()).append(" = ").append(tree.getClass().getSimpleName()).append("(");
         compose(s, getTree());
-        s.append("\n");
+        s.append("\n\n");
+        s.append("xtr, xts, ytr, yts = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True, random_state=43)\n");
+        s.append(getName()).append(".fit(xtr, ytr)\n");
         return s.toString();
     }
 

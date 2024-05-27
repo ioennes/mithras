@@ -5,8 +5,8 @@ public class DecisionTreeClassifier extends Tree
     public String criterion = "gini";
     public String splitter = "best";
     public int max_depth;
-    public float min_samples_split = 2;
-    public float min_samples_leaf = 1;
+    public int min_samples_split = 2;
+    public int min_samples_leaf = 1;
     public float min_weight_fraction_leaf = 0.0f;
     public int max_features;
     public int random_state;

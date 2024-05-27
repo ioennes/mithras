@@ -31,9 +31,9 @@ public class MainController
         SceneManager.switchToCreateTree();
     }
 
-    public void openFileBrowser(ActionEvent e) throws IOException
+    public void openCSVBrowser(ActionEvent e) throws IOException
     {
-        SceneManager.openFolderBrowser();
+        SceneManager.openCSVBrowser();
     }
 
     public void openTranscriber(ActionEvent e) throws IOException

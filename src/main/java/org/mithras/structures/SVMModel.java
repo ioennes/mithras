@@ -8,7 +8,7 @@ import static org.mithras.structures.StringComposer.compose;
 public class SVMModel extends Model
 {
     private final SVM svm;
-    private ConfigData configData = new ConfigData();
+    private final ConfigData configData = new ConfigData();
 
     public SVMModel(String name, SVM svm)
     {
@@ -22,7 +22,9 @@ public class SVMModel extends Model
         StringBuilder s = new StringBuilder();
         s.append(getName()).append(" = ").append(svm.getClass().getSimpleName()).append("(");
         compose(s, getSvm());
-        s.append("\n");
+        s.append("\n\n");
+        s.append("xtr, xts, ytr, yts = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True, random_state=43)\n");
+        s.append(getName()).append(".fit(xtr, ytr)\n");
         return s.toString();
     }
 

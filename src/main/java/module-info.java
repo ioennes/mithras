@@ -19,6 +19,7 @@ module org.mithras.mithras
     requires java.net.http;
     requires jdk.httpserver;
     requires javafx.swing;
+    requires org.json;
 
     opens org.mithras.machinelearning.neuralnetwork.layers.corePkg to com.fasterxml.jackson.databind;
     opens org.mithras.machinelearning.neuralnetwork.layers.poolPkg to com.fasterxml.jackson.databind;

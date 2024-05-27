@@ -8,9 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.mithras.machinelearning.svm.LinearSVC;
-import org.mithras.machinelearning.svm.LinearSVR;
-import org.mithras.machinelearning.svm.SVM;
+import org.mithras.machinelearning.svm.*;
 import org.mithras.structures.SVMModel;
 
 import java.io.IOException;
@@ -49,6 +47,8 @@ public class CreateSVM
         {
             case "Linear SVC" -> svm = new LinearSVC();
             case "Linear SVR" -> svm = new LinearSVR();
+            case "NuSVC" -> svm = new NuSVC();
+            case "SVC" -> svm = new SVC();
             default -> svm = new SVM();
         }
 

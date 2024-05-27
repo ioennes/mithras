@@ -1,16 +1,24 @@
 package org.mithras.mithras;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.mithras.structures.NeuralModel;
 import org.mithras.structures.SVMModel;
 import org.mithras.structures.State;
 import org.mithras.structures.TreeModel;
 
-import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -151,6 +159,28 @@ public class Card extends StackPane
                 throw new RuntimeException(ex);
             }
         });
+
+        Button run = (Button) root.lookup("#runbtn");
+        run.setOnAction(e -> {
+            try
+            {
+                run();
+            } catch (IOException | InterruptedException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        Button metrics = (Button) root.lookup("#metricsbtn");
+        metrics.setOnAction(e -> {
+            try
+            {
+                metrics();
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     /**
@@ -205,13 +235,11 @@ public class Card extends StackPane
         {
             new ClassInputDialog<>().start(((NeuralModel) ModelManager.models.get(modelName)).getCompilationData(),
                     modelName, -1);
-        }
-        else if (getCardtype() == CardType.SVM)
+        } else if (getCardtype() == CardType.SVM)
         {
             new ClassInputDialog<>().start(((SVMModel) ModelManager.models.get(modelName)).getConfigData(), modelName,
                     -1);
-        }
-        else if (getCardtype() == CardType.DecisionTreeClassifier || getCardtype() == CardType.DecisionTreeRegressor)
+        } else if (getCardtype() == CardType.DecisionTreeClassifier || getCardtype() == CardType.DecisionTreeRegressor)
         {
             new ClassInputDialog<>().start(((TreeModel) ModelManager.models.get(modelName)).getConfigData(), modelName,
                     -1);
@@ -223,6 +251,52 @@ public class Card extends StackPane
         if (getCardtype() == CardType.NeuralNetwork)
         {
             SceneManager.switchToDNNView(modelName);
+        } else
+        {
+            WritableImage img = SwingFXUtils.toFXImage(ModelManager.models.get(modelName).getPlot(), null);
+            ImageView imageView = new ImageView(img);
+
+            imageView.setPreserveRatio(true);
+
+            Stage stage = new Stage();
+            stage.setWidth(600);
+            stage.setHeight(400);
+            stage.setTitle("Model Plot");
+
+            imageView.fitWidthProperty().bind(stage.widthProperty());
+            imageView.fitHeightProperty().bind(stage.heightProperty());
+
+            imageView.addEventFilter(ScrollEvent.SCROLL, event -> {
+                if (event.isControlDown())
+                {
+                    double deltaY = event.getDeltaY();
+                    double scaleFactor = (deltaY > 0) ? 2 : 0.9;
+                    double newScaleX = imageView.getScaleX() * scaleFactor;
+                    double newScaleY = imageView.getScaleY() * scaleFactor;
+
+                    imageView.setScaleX(newScaleX);
+                    imageView.setScaleY(newScaleY);
+
+                    event.consume();
+                }
+            });
+
+            imageView.setOnMousePressed(event -> {
+                if (event.getButton() == MouseButton.MIDDLE) {
+                    imageView.setUserData(new Point2D(event.getSceneX(), event.getSceneY()));
+                }
+            });
+
+            imageView.setOnMouseDragged(event -> {
+                if (event.getButton() == MouseButton.MIDDLE) {
+                    Point2D dragDelta = (Point2D) imageView.getUserData();
+                    imageView.setTranslateX(event.getSceneX() - dragDelta.getX());
+                    imageView.setTranslateY(event.getSceneY() - dragDelta.getY());
+                }
+            });
+
+            stage.setScene(new Scene(new Group(imageView)));
+            stage.show();
         }
     }
 
@@ -235,6 +309,16 @@ public class Card extends StackPane
         StringSelection selection = new StringSelection(sb.toString());
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, null);
+    }
+
+    public void run() throws IOException, InterruptedException
+    {
+        PyTranscriber.run(modelName);
+    }
+
+    public void metrics() throws IOException
+    {
+        SceneManager.switchToMetrics(modelName);
     }
 
     /**

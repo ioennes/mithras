@@ -27,7 +27,7 @@ public class ModelExtractor
 
     private static void prepareFile() throws IOException
     {
-        if (!path.toString().substring(path.toString().length() - 3).equals(".py"))
+        if (!path.toString().endsWith(".py"))
         {
             throw new IOException("File is not a Python file.");
         }
@@ -116,11 +116,13 @@ public class ModelExtractor
     {
         BufferedReader br = new BufferedReader(new FileReader("jsonmodel.json"));
         String everything;
-        try {
+        try
+        {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
-            while (line != null) {
+            while (line != null)
+            {
                 sb.append(line);
                 sb.append(System.lineSeparator());
                 line = br.readLine();
@@ -129,7 +131,8 @@ public class ModelExtractor
         } catch (IOException e)
         {
             throw new RuntimeException(e);
-        } finally {
+        } finally
+        {
             br.close();
         }
 

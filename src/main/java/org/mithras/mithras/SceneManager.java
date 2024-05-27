@@ -1,6 +1,5 @@
 package org.mithras.mithras;
 
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.mithras.structures.DatasetHandler;
@@ -68,15 +67,21 @@ public class SceneManager
         dnncv.initializeScene(primaryStage, (NeuralModel) ModelManager.models.get(modelName));
     }
 
-    public static void openFolderBrowser() throws IOException
+    public static void switchToMetrics(String modelName) throws IOException
     {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Dataset Main Directory");
+        MetricsView metricsView = new MetricsView();
+        metricsView.initializeScene(primaryStage, modelName);
+    }
 
-        File directory = directoryChooser.showDialog(primaryStage);
-        if (directory != null)
+    public static void openCSVBrowser() throws IOException
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select CSV File");
+
+        File file = fileChooser.showOpenDialog(primaryStage);
+        if (file != null)
         {
-            DatasetHandler.setDirectory(directory.toPath());
+            DatasetHandler.setDataset(file);
         }
     }
 

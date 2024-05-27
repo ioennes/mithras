@@ -39,7 +39,7 @@ public class NeuralModel extends Model
     public String toString()
     {
         StringBuilder s = new StringBuilder();
-        s.append(getName()).append(" = Sequential([\n\t");
+        s.append(getName()).append(" = models.Sequential([\n\t");
         for (BaseLayer layer : layers)
         {
             s.append(layer.toString()).append(",\n\t");

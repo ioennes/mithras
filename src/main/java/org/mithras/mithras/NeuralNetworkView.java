@@ -1,6 +1,5 @@
 package org.mithras.mithras;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,12 +17,13 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.mithras.machinelearning.neuralnetwork.layers.BaseLayer;
-import org.mithras.structures.DatasetHandler;
 import org.mithras.structures.NeuralModel;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +41,7 @@ public class NeuralNetworkView
     private Stage stage;
     private Pane pane;
     private WritableImage image;
-    private LinkedHashMap<Integer, Group> layerPositions = new LinkedHashMap<>();
+    private final LinkedHashMap<Integer, Group> layerPositions = new LinkedHashMap<>();
 
     public void initializeScene(Stage stage, String modelName)
     {
@@ -104,23 +104,22 @@ public class NeuralNetworkView
 
     private void assignImage()
     {
-        if (DatasetHandler.trainPath != null)
-        {
-            BufferedImage tmp;
-            if (image == null)
-            {
-                tmp = DatasetHandler.getRandomImage();
-                image = SwingFXUtils.toFXImage(tmp, null);
-            }
-            try
-            {
-                oldImages.add(image);
-            } catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
+//        if (DatasetHandler.trainPath != null)
+//        {
+//            BufferedImage tmp;
+//            if (image == null)
+//            {
+//                tmp = DatasetHandler.getRandomImage();
+//                image = SwingFXUtils.toFXImage(tmp, null);
+//            }
+//            try
+//            {
+//                oldImages.add(image);
+//            } catch (Exception e)
+//            {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 
     private void drawLayers(int stageHeight) throws ExecutionException, InterruptedException

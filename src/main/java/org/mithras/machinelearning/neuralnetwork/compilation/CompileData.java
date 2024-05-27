@@ -1,8 +1,5 @@
 package org.mithras.machinelearning.neuralnetwork.compilation;
 
-import org.mithras.structures.StringComposer;
-
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +28,7 @@ public class CompileData
         if (loss != null && !loss.isEmpty())
             sb.append("\tloss=\"").append(loss).append("\",\n");
         if (metrics != null && !metrics.isEmpty())
-            sb.append("\tmetrics=[").append(metrics).append("],\n");
+            sb.append("\tmetrics=[\"").append(metrics).append("\"],\n");
         if (lossWeights != null && lossWeights.length != 0)
             sb.append("\tloss_weights=").append(Arrays.toString(lossWeights)).append(",\n");
         if (weightedMetrics != null && !weightedMetrics.isEmpty())
@@ -62,15 +59,16 @@ public class CompileData
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
 
-        if (matcher.find()) {
+        if (matcher.find())
+        {
             String replaced = matcher.replaceAll("");
 
-            sb.setLength(0);;
+            sb.setLength(0);
             sb.append(replaced);
         }
 
-        sb.append(modelName).append(".fit(").append("x=train, epochs=").append(epochs)
+        sb.append("history = ").append(modelName).append(".fit(").append("x=X, y=y, epochs=").append(epochs)
                 .append(", batch_size=").append(batchSize).append(", validation_split=")
-                .append(validationSplit).append(")");
+                .append(validationSplit / 100).append(")");
     }
 }
