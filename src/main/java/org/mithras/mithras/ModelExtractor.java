@@ -3,6 +3,7 @@ package org.mithras.mithras;
 import org.mithras.structures.DNNDeserializer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,7 +42,7 @@ public class ModelExtractor
     {
         String code =
                 """
-                        from tensorflow.keras.layers import deserialize as layer_deserialize
+                        \nfrom tensorflow.keras.layers import deserialize as layer_deserialize
 
                         json_string = ""
 
@@ -109,6 +110,10 @@ public class ModelExtractor
                             file.write(json_string)
                                         """;
 
+        StringBuilder imports = new StringBuilder("\n");
+        PyTranscriber.writeImports(imports);
+
+        Files.writeString(path, imports, StandardOpenOption.APPEND);
         Files.writeString(path, code, StandardOpenOption.APPEND);
     }
 

@@ -60,6 +60,11 @@ public class CreateSVM
         }
     }
 
+    public void back(ActionEvent e) throws IOException
+    {
+        SceneManager.switchToModelSelection();
+    }
+
     private void initializeTypesDNN(ComboBox<String> cb)
     {
         cb.setItems(FXCollections.observableArrayList(

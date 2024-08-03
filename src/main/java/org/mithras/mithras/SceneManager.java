@@ -99,7 +99,6 @@ public class SceneManager
         File file = fileChooser.showOpenDialog(primaryStage);
         if (file != null)
         {
-            String filePath = file.getAbsolutePath();
             ModelExtractor.extractModels(file.toPath());
         }
     }

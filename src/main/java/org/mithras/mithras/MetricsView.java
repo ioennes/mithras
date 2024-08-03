@@ -1,16 +1,25 @@
 package org.mithras.mithras;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.*;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.mithras.structures.NeuralModel;
 import org.mithras.structures.State;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class MetricsView
@@ -31,7 +40,11 @@ public class MetricsView
             // Set the model name and initialize charts
             this.modelName = modelName;
             State.setModelName(modelName);
-            setupCharts(scene);
+            setup(scene);
+            Button backButton = (Button) scene.lookup("#backbtn");
+            if (backButton != null) {
+                backButton.toFront();
+            }
             stage.setScene(scene);
         } catch (IOException e)
         {
@@ -39,132 +52,113 @@ public class MetricsView
         }
     }
 
-    private void setupCharts(Scene scene)
+    public void setup(Scene scene)
     {
-        // Get the JSON object containing metrics
-        JSONObject jsonObject = ModelManager.models.get(modelName).getMetrics();
-        System.out.println(jsonObject.toString());
-
-        // Add series to the charts
-        Pane trainChartContainer = (Pane) scene.lookup("#trainChartContainer");
-        Pane validChartContainer = (Pane) scene.lookup("#validChartContainer");
-
-        boolean trainBar = isSingleValueMetrics(jsonObject, "", "loss", "accuracy", "f1_score",
-                "recall", "precision");
-        boolean validBar = isSingleValueMetrics(jsonObject, "val_", "loss", "accuracy", "f1_score",
-                "recall", "precision");
-
-        if (trainBar || validBar)
+        ModelStatistics statistics = ModelManager.models.get(modelName).getStatistics();
+        if (ModelManager.models.get(modelName) instanceof NeuralModel)
         {
-            // Create and configure the bar charts
-            BarChart<Number, String> trainBarChart = createBarChart("Training Metrics");
-            BarChart<Number, String> validBarChart = createBarChart("Validation Metrics");
-
-            // Add new bar charts to the containers
-            trainChartContainer.getChildren().clear();
-            trainChartContainer.getChildren().add(trainBarChart);
-            validChartContainer.getChildren().clear();
-            validChartContainer.getChildren().add(validBarChart);
-
-            // Add data to the bar charts
-            addSeriesToBarChart(jsonObject, trainBarChart, "", "loss", "accuracy", "f1_score", "recall", "precision");
-            addSeriesToBarChart(jsonObject, validBarChart, "val_", "loss", "accuracy", "f1_score", "recall", "precision");
+            setupLineCharts(scene, statistics);
         } else
         {
-            // Create and configure the line charts
-            LineChart<Number, Number> trainLineChart = createLineChart("Training Metrics");
-            LineChart<Number, Number> validLineChart = createLineChart("Validation Metrics");
-
-            // Add new line charts to the containers
-            trainChartContainer.getChildren().clear();
-            trainChartContainer.getChildren().add(trainLineChart);
-            validChartContainer.getChildren().clear();
-            validChartContainer.getChildren().add(validLineChart);
-
-            // Add data to the line charts
-            addSeriesToLineChart(jsonObject, trainLineChart, "", "loss", "accuracy", "f1_score", "recall", "precision");
-            addSeriesToLineChart(jsonObject, validLineChart, "val_", "loss", "accuracy", "f1_score", "recall", "precision");
+            setupCenteredVBox(scene, statistics);
         }
     }
 
-    private boolean isSingleValueMetrics(JSONObject jsonObject, String prefix, String... metricNames)
+    private void setupLineCharts(Scene scene, ModelStatistics statistics)
     {
-        System.out.println(jsonObject.toString());
-        for (String metric : metricNames)
-        {
-            System.out.println(prefix + metric);
-            if (jsonObject.has(prefix + metric))
-            {
-                JSONArray array = jsonObject.getJSONArray(prefix + metric);
-                System.out.println(array.length());
-                if (array.length() == 1)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        HBox hbox = new HBox();
+        hbox.setSpacing(20);
+        hbox.setPadding(new Insets(20));
+
+        LineChart<Number, Number> trainChart = createLineChart("Training", statistics);
+        LineChart<Number, Number> validChart = createLineChart("Validation", statistics);
+
+        hbox.getChildren().addAll(trainChart, validChart);
+
+        ((Pane) scene.getRoot()).getChildren().add(hbox);
     }
 
-    private BarChart<Number, String> createBarChart(String title)
+    private LineChart<Number, Number> createLineChart(String title, ModelStatistics statistics)
     {
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Metric");
-        yAxis.setLabel("Value");
-        BarChart<Number, String> barChart = new BarChart<>(yAxis, xAxis);
-        barChart.setTitle(title);
-        return barChart;
-    }
+        int idx = title.equals("Training") ? 0 : 1;
 
-    private LineChart<Number, Number> createLineChart(String title)
-    {
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Epoch");
         yAxis.setLabel("Value");
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle(title);
+
+        XYChart.Series<Number, Number> loss_series = new XYChart.Series<>();
+        loss_series.setName("Loss");
+        addData(loss_series, statistics.avg_loss.get(idx));
+
+        XYChart.Series<Number, Number> acc_series = new XYChart.Series<>();
+        acc_series.setName("Accuracy");
+        addData(acc_series, statistics.avg_accuracy.get(idx));
+
+        XYChart.Series<Number, Number> f1_series = new XYChart.Series<>();
+        f1_series.setName("F1");
+        addData(f1_series, statistics.avg_f1.get(idx));
+
+        XYChart.Series<Number, Number> recall_series = new XYChart.Series<>();
+        recall_series.setName("Recall");
+        addData(recall_series, statistics.avg_recall.get(idx));
+
+        XYChart.Series<Number, Number> pres_series = new XYChart.Series<>();
+        pres_series.setName("Precision");
+        addData(pres_series, statistics.avg_precision.get(idx));
+
+        lineChart.getData().addAll(loss_series, acc_series, f1_series, recall_series, pres_series);
+
         return lineChart;
     }
 
-    private void addSeriesToBarChart(JSONObject jsonObject, BarChart<Number, String> barChart, String prefix, String... metricNames)
+    private void addData(XYChart.Series<Number, Number> series, ArrayList<Double> avg)
     {
-        for (String metric : metricNames)
+        for (int i = 0; i < avg.size(); i++)
         {
-            if (jsonObject.has(prefix + metric))
-            {
-                XYChart.Series<Number, String> series = new XYChart.Series<>();
-                series.setName(prefix.isEmpty() ? metric : metric + " (Validation)");
-
-                JSONArray metricArray = jsonObject.getJSONArray(prefix + metric);
-                for (int i = 0; i < metricArray.length(); i++)
-                {
-                    series.getData().add(new XYChart.Data<>(metricArray.getDouble(i), metric));
-                }
-
-                barChart.getData().add(series);
-            }
+            series.getData().add(new XYChart.Data<>(i + 1, avg.get(i)));
         }
     }
 
-    private void addSeriesToLineChart(JSONObject jsonObject, LineChart<Number, Number> lineChart, String prefix, String... metricNames)
+    private void setupCenteredVBox(Scene scene, ModelStatistics statistics)
     {
-        for (String metric : metricNames)
-        {
-            if (jsonObject.has(prefix + metric))
-            {
-                XYChart.Series<Number, Number> series = new XYChart.Series<>();
-                series.setName(prefix.isEmpty() ? metric : metric + " (Validation)");
+        Label accuracyLabel = new Label("Accuracy");
+        accuracyLabel.setStyle("-fx-font-size: 18px;");
 
-                JSONArray metricArray = jsonObject.getJSONArray(prefix + metric);
-                for (int i = 0; i < metricArray.length(); i++)
-                {
-                    series.getData().add(new XYChart.Data<>(i + 1, metricArray.getDouble(i)));
-                }
+        Label acc = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_accuracy.get(1).get(0)*100,
+                statistics.std_accuracy.get(1).get(0)*100));
+        acc.setStyle("-fx-font-size: 24px;");
 
-                lineChart.getData().add(series);
-            }
-        }
+        Label f1Label = new Label("F1");
+        f1Label.setStyle("-fx-font-size: 18px;");
+
+        Label f1 = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_f1.get(1).get(0)*100,
+                statistics.std_f1.get(1).get(0)*100));
+        f1.setStyle("-fx-font-size: 24px;");
+
+        Label recallLabel = new Label("Recall");
+        recallLabel.setStyle("-fx-font-size: 18px;");
+
+        Label re = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_recall.get(1).get(0)*100,
+                statistics.std_recall.get(1).get(0)*100));
+        re.setStyle("-fx-font-size: 24px;");
+
+        Label precisionLabel = new Label("Precision");
+        precisionLabel.setStyle("-fx-font-size: 18px;");
+
+        Label pr = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_precision.get(1).get(0)*100,
+                statistics.std_precision.get(1).get(0)*100));
+        pr.setStyle("-fx-font-size: 24px;");
+
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(20);
+        vbox.setPadding(new Insets(20));
+
+        vbox.getChildren().addAll(accuracyLabel, acc, f1Label, f1, recallLabel, re, precisionLabel, pr);
+
+        ((Pane) scene.getRoot()).getChildren().add(vbox);
     }
 }

@@ -1,23 +1,30 @@
+* {
+    -mainbg: #FAEED1;
+    -border: #B2A59B;
+    -innebg: #DED0B6;
+    -textcl: #607274;
+}
+
 .scroll-pane {
-    -fx-background-color: #000000;
+    -fx-background-color: -mainbg;
 }
 
 Text {
     -fx-font-smoothing-type: lcd;
-    -fx-fill: white;
+    -fx-fill: -textcl;
     -fx-font-size: 13pt;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Monaspace Argon Medium";
 }
 
 .layerListBtn {
-    -fx-background-color: #000000;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #FFFDE7;
+    -fx-text-fill: black;
     -fx-font-size: 13px;
     -fx-font-weight: normal;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Monaspace Argon Medium";
     -fx-background-radius: 0;
     -fx-border-radius: 5em;
-    -fx-border-color: rgba(255, 255, 255, 0.73);
+    -fx-border-color: #F6E3BA;
     -fx-border-width: 1px;
     -fx-padding: 5px 10px 5px 10px;
     -fx-border-insets: 5px;
@@ -26,14 +33,14 @@ Text {
 }
 
 .button {
-    -fx-background-color: #000000;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: -innebg;
+    -fx-text-fill: -textcl;
     -fx-font-size: 16px;
     -fx-font-weight: normal;
-    -fx-font-family: "Arial";
-    -fx-background-radius: 5em; /* Match this with -fx-border-radius if you want rounded corners */
-    -fx-border-radius: 5em;
-    -fx-border-color: rgba(255, 255, 255, 0.73);
+    -fx-font-family: "Monaspace Argon Medium";
+    -fx-background-radius: 1em; /* Match this with -fx-border-radius if you want rounded corners */
+    -fx-border-radius: 1em;
+    -fx-border-color: -border;
     -fx-border-width: 1px;
     -fx-padding: 5px 10px 5px 10px;
     -fx-border-insets: 0; /* Typically, this should be 0 unless you want to offset the border from the edge */
@@ -48,10 +55,10 @@ Text {
 }
 
 .text-area, .text-field {
-    -fx-control-inner-background: #000000;
+    -fx-control-inner-background: -mainbg;
     -fx-background-color: -fx-control-inner-background;
-    -fx-text-fill: #ffffff;
-    -fx-border-color: transparent transparent white transparent;
+    -fx-text-fill: black;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: -1px -1px 2px -1px;
     -fx-border-radius: 0px;
     -fx-border-style: solid;
@@ -87,9 +94,10 @@ Text {
 }
 
 .card {
-    -fx-background-color: black;
-    -fx-border-color: gray;
-    -fx-border-radius: 3em;
+    -fx-background-color: -innebg;
+    -fx-border-color: -border;
+    -fx-border-radius: 1em;
+    -fx-background-radius: 1em;
     -fx-border-width: 2px;
 }
 
@@ -98,7 +106,7 @@ Text {
 }
 
 .list-cell {
-    -fx-background-color: black;
-    -fx-text-fill: white;
+    -fx-background-color: -innebg;
+    -fx-text-fill: black;
     -fx-font-size: 15px;
 }

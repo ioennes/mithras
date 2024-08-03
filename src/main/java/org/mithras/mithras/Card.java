@@ -304,6 +304,7 @@ public class Card extends StackPane
     {
         StringBuilder sb = new StringBuilder();
         PyTranscriber.writeImports(sb);
+        PyTranscriber.writeDataset(sb);
         sb.append("\n");
         sb.append(ModelManager.models.get(modelName).toString());
         StringSelection selection = new StringSelection(sb.toString());
@@ -313,7 +314,10 @@ public class Card extends StackPane
 
     public void run() throws IOException, InterruptedException
     {
-        PyTranscriber.run(modelName);
+        ModelStatistics statistics = new ModelStatistics();
+        new ClassInputDialog<>().start(statistics, modelName, -1);
+        ModelManager.models.get(modelName).setStatistics(statistics);
+        ModelManager.models.get(modelName).getStatistics().run(modelName);
     }
 
     public void metrics() throws IOException

@@ -44,13 +44,13 @@ public class NeuralNetworkLayerSelection
             ScrollPane scrollPane = (ScrollPane) scene.lookup("#nnscrollpane");
             GridPane gridPane = new GridPane();
             gridPane.setPadding(new Insets(20));
+            gridPane.setHgap(20);
+            gridPane.setVgap(5);
 
             gridPane.minWidthProperty().bind(scrollPane.widthProperty());
             gridPane.minHeightProperty().bind(scrollPane.heightProperty());
             gridPane.setMaxWidth(Double.MAX_VALUE);
             gridPane.setMaxHeight(Double.MAX_VALUE);
-
-            gridPane.setStyle("-fx-background-color: #000000");
 
             createLayerButtons(gridPane);
 

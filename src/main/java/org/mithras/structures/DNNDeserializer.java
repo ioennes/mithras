@@ -55,19 +55,20 @@ public class DNNDeserializer
                     case "Dense" -> mapper.treeToValue(layerData, Dense.class);
                     case "Flatten" -> mapper.treeToValue(layerData, Flatten.class);
                     case "Dropout" -> mapper.treeToValue(layerData, Dropout.class);
-                    case "MaxPool1D" -> mapper.treeToValue(layerData, MaxPool1D.class);
-                    case "MaxPool2D" -> mapper.treeToValue(layerData, MaxPool2D.class);
-                    case "AveragePool1D" -> mapper.treeToValue(layerData, AveragePool1D.class);
-                    case "AveragePool2D" -> mapper.treeToValue(layerData, AveragePool2D.class);
-                    case "GlobalMaxPool1D" -> mapper.treeToValue(layerData, GlobalMaxPool1D.class);
-                    case "GlobalMaxPool2D" -> mapper.treeToValue(layerData, GlobalMaxPool2D.class);
-                    case "GlobalAveragePool1D" -> mapper.treeToValue(layerData, GlobalAveragePool1D.class);
-                    case "GlobalAveragePool2D" -> mapper.treeToValue(layerData, GlobalAveragePool2D.class);
+                    case "MaxPooling1D" -> mapper.treeToValue(layerData, MaxPool1D.class);
+                    case "MaxPooling2D" -> mapper.treeToValue(layerData, MaxPool2D.class);
+                    case "AveragePooling1D" -> mapper.treeToValue(layerData, AveragePool1D.class);
+                    case "AveragePooling2D" -> mapper.treeToValue(layerData, AveragePool2D.class);
+                    case "GlobalMaxPooling1D" -> mapper.treeToValue(layerData, GlobalMaxPool1D.class);
+                    case "GlobalMaxPooling2D" -> mapper.treeToValue(layerData, GlobalMaxPool2D.class);
+                    case "GlobalAveragePooling1D" -> mapper.treeToValue(layerData, GlobalAveragePool1D.class);
+                    case "GlobalAveragePooling2D" -> mapper.treeToValue(layerData, GlobalAveragePool2D.class);
                     case "Conv1D" -> mapper.treeToValue(layerData, Conv1D.class);
                     case "Conv2D" -> mapper.treeToValue(layerData, Conv2D.class);
                     default -> null;
                 };
                 model.getLayers().add(l);
+                System.out.println(l.toString());
             }
             ModelManager.models.put(modelName, model);
             ModelManager.cards.add(new Card(modelName, "Neural", Card.CardType.NeuralNetwork));

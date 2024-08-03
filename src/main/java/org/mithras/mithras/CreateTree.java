@@ -58,6 +58,11 @@ public class CreateTree
         }
     }
 
+    public void back(ActionEvent e) throws IOException
+    {
+        SceneManager.switchToModelSelection();
+    }
+
     private void initializeTypesTree(ComboBox<String> cb)
     {
         cb.setItems(FXCollections.observableArrayList(

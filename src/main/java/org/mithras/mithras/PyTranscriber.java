@@ -1,17 +1,21 @@
 package org.mithras.mithras;
 
+import org.json.JSONObject;
 import org.mithras.structures.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 public class PyTranscriber
 {
     public static String filename;
+    public static Path environment = Paths.get("python");
 
-    public static void run(String model) throws IOException, InterruptedException
+    public static JSONObject run(String model) throws IOException, InterruptedException
     {
         StringBuilder sb = new StringBuilder();
 
@@ -27,13 +31,15 @@ public class PyTranscriber
             e.printStackTrace();
         }
 
-        Process p = new ProcessBuilder("python", filename + ".py").start();
+        Process p = new ProcessBuilder(environment.toString(), filename + ".py").start();
+        System.out.println(environment.toString() + " " + filename + ".py");
         p.waitFor();
-        ModelManager.models.get(model).setMetrics(Path.of("metrics.json"));
+
         if (!(ModelManager.models.get(model) instanceof NeuralModel))
         {
             ModelManager.models.get(model).setPlot(Path.of("plot.png"));
         }
+        return new JSONObject(new String(Files.readAllBytes(Path.of("metrics.json"))));
     }
 
     public static void transcribe()
@@ -55,6 +61,8 @@ public class PyTranscriber
 
     public static void writeImports(StringBuilder sb)
     {
+        sb.append("import os").append("\n");
+        sb.append("os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'").append("\n");
         sb.append("import tensorflow as tf").append("\n");
         sb.append("import matplotlib.pyplot as plt").append("\n");
         sb.append("from matplotlib.pyplot import subplots").append("\n");
@@ -62,6 +70,7 @@ public class PyTranscriber
         sb.append("import numpy as np").append("\n");
         sb.append("import json").append("\n");
         sb.append("from tensorflow.keras import models, layers").append("\n");
+        sb.append("from tensorflow.keras.models import Sequential").append("\n");
         sb.append("from sklearn.tree import *").append("\n");
         sb.append("from sklearn.svm import *").append("\n");
         sb.append("from sklearn.model_selection import train_test_split").append("\n");
@@ -70,7 +79,7 @@ public class PyTranscriber
         sb.append("from sklearn.model_selection import KFold").append("\n\n");
     }
 
-    private static void writeDataset(StringBuilder sb)
+    public static void writeDataset(StringBuilder sb)
     {
         sb.append(DatasetHandler.preprocessFile());
     }
@@ -78,6 +87,7 @@ public class PyTranscriber
     private static void writeModels(StringBuilder sb)
     {
         Set<String> keys = ModelManager.models.keySet();
+
 
         for (String key : keys)
         {
@@ -92,7 +102,7 @@ public class PyTranscriber
         {
             sb.append(ModelManager.models.get(model).toString()).append("\n\n");
             sb.append("with open('metrics.json', 'w') as f:\n");
-            sb.append("\tjson.dump(history.history)\n");
+            sb.append("\tjson.dump(history.history, f)\n");
             return;
         }
 
@@ -170,7 +180,8 @@ public class PyTranscriber
         } else if (ModelManager.models.get(model) instanceof TreeModel)
         {
             sb.append("fig, ax = subplots(figsize=(12,12))\n");
-            sb.append("plot_tree(").append(ModelManager.models.get(model).getName()).append(", feature_names=X.columns, ax=ax)\n");
+            sb.append("plot_tree(").append(ModelManager.models.get(model).getName()).append(", feature_names=X.columns," +
+                    " ax=ax, filled=True, rounded=True, proportion=False, precision=2, node_ids=False, impurity=False)\n");
             sb.append("plt.savefig('plot.png', dpi=500)");
         }
     }

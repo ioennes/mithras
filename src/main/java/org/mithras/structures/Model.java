@@ -1,17 +1,16 @@
 package org.mithras.structures;
 
-import org.json.JSONObject;
+import org.mithras.mithras.ModelStatistics;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Model
 {
     private String name;
-    private JSONObject metrics;
+    private ModelStatistics metrics;
     private BufferedImage plot;
 
     public Model(String name)
@@ -29,14 +28,14 @@ public class Model
         this.name = name;
     }
 
-    public JSONObject getMetrics()
+    public ModelStatistics getStatistics()
     {
         return metrics;
     }
 
-    public void setMetrics(Path metrics_path) throws IOException
+    public void setStatistics(ModelStatistics statistics)
     {
-        this.metrics = new JSONObject(new String(Files.readAllBytes(metrics_path)));
+        this.metrics = statistics;
     }
 
     public BufferedImage getPlot()

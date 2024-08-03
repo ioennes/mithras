@@ -8,12 +8,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.mithras.machinelearning.neuralnetwork.layers.BaseLayer;
 import org.mithras.structures.Model;
@@ -21,6 +20,8 @@ import org.mithras.structures.NeuralModel;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class ClassInputDialog<T>
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ClassInputDialog.fxml"));
         loader.setController(this);
         Parent root = loader.load();
-        Scene scene = new Scene(root, 600, -1);
+        Scene scene = new Scene(root, 650, -1);
 
         GridPane gridPane = (GridPane) scene.lookup("#inputgrid");
         gridPane.setPadding(new Insets(20));
@@ -184,11 +185,26 @@ public class ClassInputDialog<T>
      */
     private void addFieldToGridPane(GridPane gp, Field field, T object, int row) throws IllegalAccessException
     {
-        gp.add(new Text(translate(field.getName())), 0, row);
+        Text fieldNameText = new Text(translate(field.getName()));
+        fieldNameText.setFocusTraversable(true);
+        Tooltip tooltip = new Tooltip(Translator.annotate(translate(field.getName())));
+        Tooltip.install(fieldNameText, tooltip);
+        gp.add(fieldNameText, 0, row);
+
         gp.add(new Text(translate(field.getType().toString())), 1, row);
 
         Object fieldValue = field.get(object);
-        Node inputNode = field.getType().equals(Boolean.TYPE) ? createCheckBox(fieldValue) : createTextField(field, fieldValue);
+        Node inputNode;
+        if (field.getType().equals(Boolean.TYPE))
+        {
+            inputNode = createCheckBox(fieldValue);
+        } else if (field.getType().equals(Path.class))
+        {
+            inputNode = createFileChooserButton(field, fieldValue);
+        } else
+        {
+            inputNode = createTextField(field, fieldValue);
+        }
         gp.add(inputNode, 2, row);
         fieldInputMap.put(field, inputNode);
     }
@@ -227,6 +243,43 @@ public class ClassInputDialog<T>
     }
 
     /**
+     * Creates a Button to select a file location with a given initial value.
+     *
+     * @param field      The field the Button corresponds to
+     * @param fieldValue The initial value of the Button
+     * @return The created Button
+     */
+    private Button createFileChooserButton(Field field, Object fieldValue)
+    {
+        Button button = new Button(fieldValue != null ? fieldValue.toString() : "Select File");
+        button.setOnAction(event ->
+        {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select File");
+            if (fieldValue != null)
+            {
+                fileChooser.setInitialDirectory(((Path) fieldValue).toFile().getParentFile());
+            }
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("All Files", "*.*")
+            );
+            java.io.File selectedFile = fileChooser.showOpenDialog(button.getScene().getWindow());
+            if (selectedFile != null)
+            {
+                button.setText(selectedFile.toString());
+                try
+                {
+                    field.set(object, selectedFile.toPath());
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return button;
+    }
+
+    /**
      * Binds the data from the input nodes to the corresponding fields of a class.
      *
      * @param cls The class to bind the data to
@@ -237,27 +290,30 @@ public class ClassInputDialog<T>
         for (Map.Entry<Field, Node> entry : fieldInputMap.entrySet())
         {
             Field field = entry.getKey();
-            String inputToString = getInputString(entry.getValue());
+            System.out.println(field.getType().getName());
 
             switch (field.getType().getName())
             {
                 case "int":
-                    setIntField(field, cls, inputToString);
+                    setIntField(field, cls, getInputString(entry.getValue()));
                     break;
                 case "boolean":
-                    field.setBoolean(cls, Boolean.parseBoolean(inputToString));
+                    field.setBoolean(cls, Boolean.parseBoolean(getInputString(entry.getValue())));
                     break;
                 case "java.lang.String":
-                    field.set(cls, inputToString);
+                    field.set(cls, getInputString(entry.getValue()));
                     break;
                 case "float":
-                    setFloatField(field, cls, inputToString);
+                    setFloatField(field, cls, getInputString(entry.getValue()));
                     break;
                 case "[I":
-                    setIntArrayField(field, cls, inputToString);
+                    setIntArrayField(field, cls, getInputString(entry.getValue()));
                     break;
                 case "[Ljava.lang.String;":
-                    setStringArrayField(field, cls, inputToString);
+                    setStringArrayField(field, cls, getInputString(entry.getValue()));
+                    break;
+                case "java.nio.file.Path":
+                    setPathField(field, cls, (Button) entry.getValue());
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + field.getType().getName());
@@ -334,6 +390,11 @@ public class ClassInputDialog<T>
         }
     }
 
+    private void setPathField(Field field, Object cls, Button btn) throws IllegalAccessException
+    {
+        field.set(cls, Paths.get(btn.getText()));
+    }
+
     /**
      * Sets the value of a String array field.
      *
@@ -402,6 +463,7 @@ public class ClassInputDialog<T>
                     BaseLayer.updateShapeParameters(((NeuralModel) model).getLayers());
                 }
             }
+            System.out.println(object.toString());
             dialogStage.close();
         } catch (IllegalAccessException ex)
         {

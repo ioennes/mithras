@@ -18,7 +18,7 @@ public class Main
         try
         {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Main.fxml")));
-            Scene scene = new Scene(root, 1200, 1000);
+            Scene scene = new Scene(root, 1200, 800);
 
             GridPane gridPane = (GridPane) scene.lookup("#cardgrid");
 

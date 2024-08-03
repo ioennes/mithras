@@ -1,5 +1,6 @@
 package org.mithras.machinelearning.neuralnetwork.layers;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -10,22 +11,43 @@ import org.mithras.machinelearning.neuralnetwork.layers.activationPkg.sigmoid;
 public abstract class BaseConvolutional extends BaseLayer implements Activatable
 {
     private final ConnectionType connectionType = ConnectionType.FULLY_CONNECTED;
-    public int filters = 32;
-    public int[] kernel_size = new int[]{1};
-    public int[] strides;
-    public String padding;
-    public int[] dilation_rate;
-    public int groups;
-    public String activation;
-    public boolean use_bias = true;
-    public String kernel_initializer;
-    public String bias_initializer;
-    public String kernel_regularizer;
-    public String bias_regularizer;
-    public String activity_regularizer;
-    public String kernel_constraint;
-    public String bias_constraint;
     String layerName = "BaseConvolutional";
+    @JsonProperty("trainable")
+    private boolean trainable = true;
+    @JsonProperty("dtype")
+    private String dtype;
+    @JsonProperty("data_format")
+    private String data_format;
+    @JsonProperty("filters")
+    public int filters = 32;
+    @JsonProperty("kernel_size")
+    public int[] kernel_size = new int[]{1};
+    @JsonProperty("strides")
+    public int[] strides;
+    @JsonProperty("padding")
+    public String padding;
+    @JsonProperty("dilation_rate")
+    public int[] dilation_rate;
+    @JsonProperty("groups")
+    public int groups;
+    @JsonProperty("activation")
+    public String activation;
+    @JsonProperty("use_bias")
+    public boolean use_bias = true;
+    @JsonProperty("kernel_initializer")
+    public String kernel_initializer;
+    @JsonProperty("bias_initializer")
+    public String bias_initializer;
+    @JsonProperty("kernel_regularizer")
+    public String kernel_regularizer;
+    @JsonProperty("bias_regularizer")
+    public String bias_regularizer;
+    @JsonProperty("activity_regularizer")
+    public String activity_regularizer;
+    @JsonProperty("kernel_constraint")
+    public String kernel_constraint;
+    @JsonProperty("bias_constraint")
+    public String bias_constraint;
 
     public String getLayerName()
     {
