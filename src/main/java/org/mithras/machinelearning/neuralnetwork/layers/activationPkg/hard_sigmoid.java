@@ -11,8 +11,5 @@ public class hard_sigmoid extends BaseActivation
         return (float) Math.max(0, Math.min(1, (0.2 * x) + 0.5));
     }
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

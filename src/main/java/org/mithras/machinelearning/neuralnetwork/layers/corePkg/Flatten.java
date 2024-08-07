@@ -20,9 +20,4 @@ public class Flatten extends BaseLayer
     {
         return connectionType;
     }
-
-    public String getLayerName()
-    {
-        return layerName;
-    }
 }

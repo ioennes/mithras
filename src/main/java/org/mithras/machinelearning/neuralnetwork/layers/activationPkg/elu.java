@@ -8,8 +8,5 @@ public class elu extends BaseActivation
     public float alpha;
     String layerName = "elu";
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

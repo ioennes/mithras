@@ -15,12 +15,6 @@ public class BaseGlobalPool extends BaseLayer
     public boolean keepdims;
 
     @Override
-    public String getLayerName()
-    {
-        return null;
-    }
-
-    @Override
     public ConnectionType getConnectionType()
     {
         return connectionType;

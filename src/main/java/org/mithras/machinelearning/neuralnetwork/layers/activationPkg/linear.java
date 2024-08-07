@@ -11,8 +11,5 @@ public class linear extends BaseActivation
         return x;
     }
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

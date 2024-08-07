@@ -49,10 +49,7 @@ public abstract class BaseConvolutional extends BaseLayer implements Activatable
     @JsonProperty("bias_constraint")
     public String bias_constraint;
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 
     @Override
     public ConnectionType getConnectionType()

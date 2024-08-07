@@ -8,10 +8,7 @@ public class tanh extends BaseActivation
 {
     String layerName = "tanh";
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 
     public BufferedImage neuralFunction(BufferedImage inputInstance)
     {

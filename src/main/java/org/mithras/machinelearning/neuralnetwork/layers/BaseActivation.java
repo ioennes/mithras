@@ -7,11 +7,6 @@ public abstract class BaseActivation extends BaseLayer
     private int x;
     private boolean isImplicit = false;
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
-
     @Override
     public ConnectionType getConnectionType()
     {

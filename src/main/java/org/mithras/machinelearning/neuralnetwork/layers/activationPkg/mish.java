@@ -6,10 +6,7 @@ public class mish extends BaseActivation
 {
     String layerName = "mish";
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 
     private double mish(double x)
     {

@@ -6,9 +6,4 @@ public class softmax extends BaseActivation
 {
     String layerName = "softmax";
     int axis;
-
-    public String getLayerName()
-    {
-        return layerName;
-    }
 }

@@ -33,10 +33,7 @@ public class Dense extends BaseLayer implements Activatable
     public String dtype = "float32";
     String layerName = "Dense";
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 
     @Override
     public ConnectionType getConnectionType()

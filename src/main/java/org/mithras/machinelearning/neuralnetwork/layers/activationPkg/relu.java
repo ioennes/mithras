@@ -39,8 +39,5 @@ public class relu extends BaseActivation
         return outputInstance;
     }
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

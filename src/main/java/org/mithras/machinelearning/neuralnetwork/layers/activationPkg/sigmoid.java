@@ -36,8 +36,5 @@ public class sigmoid extends BaseActivation
         return outputInstance;
     }
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

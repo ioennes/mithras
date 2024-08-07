@@ -6,8 +6,5 @@ public class softplus extends BaseActivation
 {
     String layerName = "softplus";
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

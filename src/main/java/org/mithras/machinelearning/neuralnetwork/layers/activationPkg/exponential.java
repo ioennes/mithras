@@ -11,8 +11,5 @@ public class exponential extends BaseActivation
         return (float) Math.exp(x);
     }
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }

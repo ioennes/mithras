@@ -20,10 +20,7 @@ public class BasePool extends BaseLayer
     public String padding;
 
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 
     @Override
     public ConnectionType getConnectionType()

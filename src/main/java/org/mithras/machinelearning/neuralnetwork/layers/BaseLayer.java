@@ -145,8 +145,6 @@ public abstract class BaseLayer
         else return object == null;
     }
 
-    abstract public String getLayerName();
-
     abstract public ConnectionType getConnectionType();
 
     public int[] getDimensions()

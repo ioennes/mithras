@@ -19,10 +19,4 @@ public class Dropout extends BaseLayer
     {
         return connectionType;
     }
-
-    @Override
-    public String getLayerName()
-    {
-        return "Dropout";
-    }
 }

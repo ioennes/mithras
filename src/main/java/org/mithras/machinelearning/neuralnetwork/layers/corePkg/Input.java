@@ -27,8 +27,5 @@ public class Input extends BaseLayer
         return connectionType;
     }
 
-    public String getLayerName()
-    {
-        return layerName;
-    }
+
 }
