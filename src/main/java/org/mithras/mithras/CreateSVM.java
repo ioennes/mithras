@@ -24,7 +24,7 @@ public class CreateSVM
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CreateSVM.fxml"));
             loader.setControllerFactory(param -> this);
             Parent root = loader.load();
-            scene = new Scene(root, 1200, 1000);
+            scene = new Scene(root, 1200, 800);
             scene.getStylesheets().add(StyleUtil.getCss());
 
             ComboBox cb = (ComboBox) scene.lookup("#svmtype");

@@ -1,5 +1,8 @@
 package org.mithras.mithras;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.mithras.structures.DatasetHandler;
@@ -8,6 +11,7 @@ import org.mithras.structures.State;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 public class SceneManager
 {
@@ -75,13 +79,76 @@ public class SceneManager
 
     public static void openCSVBrowser() throws IOException
     {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select CSV File");
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setContentText("Is the dataset numeric or image-based?");
 
-        File file = fileChooser.showOpenDialog(primaryStage);
-        if (file != null)
+        ButtonType numericButton = new ButtonType("Numeric");
+        ButtonType imageButton = new ButtonType("Image");
+
+        alert.getButtonTypes().setAll(numericButton, imageButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent())
         {
-            DatasetHandler.setDataset(file);
+            if (result.get() == numericButton)
+            {
+                DatasetHandler.setNumeric(true);
+
+                alert.setTitle("Dataset Task");
+                alert.setContentText("Is the dataset regression or classification?");
+
+                ButtonType classification = new ButtonType("Classification");
+                ButtonType regression = new ButtonType("Regression");
+
+                alert.getButtonTypes().setAll(classification, regression);
+
+                result = alert.showAndWait();
+
+                if (result.get() == classification)
+                {
+                    DatasetHandler.setRegression(false);
+                }
+                else if (result.get() == regression)
+                {
+                    DatasetHandler.setRegression(true);
+                }
+            }
+            else if (result.get() == imageButton)
+            {
+                DatasetHandler.setNumeric(false);
+
+                alert.setTitle("Image Type");
+                alert.setContentText("Is the image RGB or Grayscale?");
+
+                ButtonType rgbButton = new ButtonType("RGB");
+                ButtonType grayscaleButton = new ButtonType("Grayscale");
+
+                alert.getButtonTypes().setAll(rgbButton, grayscaleButton);
+
+                result = alert.showAndWait();
+
+                if (result.isPresent())
+                {
+                    if (result.get() == rgbButton)
+                    {
+                        DatasetHandler.setGrayscale(false);
+                    }
+                    else if (result.get() == grayscaleButton)
+                    {
+                        DatasetHandler.setGrayscale(true);
+                    }
+                }
+            }
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select CSV File");
+            File file = fileChooser.showOpenDialog(primaryStage);
+
+            if (file != null)
+            {
+                DatasetHandler.setDataset(file);
+            }
         }
     }
 

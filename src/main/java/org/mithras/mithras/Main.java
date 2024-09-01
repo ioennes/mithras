@@ -11,8 +11,6 @@ import java.util.Objects;
 
 public class Main
 {
-    private static Main instance;
-
     public void initializeScene(Stage stage)
     {
         try

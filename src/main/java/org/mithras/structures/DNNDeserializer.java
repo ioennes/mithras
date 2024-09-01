@@ -43,7 +43,7 @@ public class DNNDeserializer
         {
             JsonNode node = mapper.readTree(json);
             String modelName = node.get("model_name").asText();
-            NeuralModel model = new NeuralModel(modelName);
+            NeuralModel model = new NeuralModel(modelName, DatasetHandler.isRegression() ? "Regression" : "Classification");
             JsonNode layers = node.get("layers");
             for (JsonNode layer : layers)
             {

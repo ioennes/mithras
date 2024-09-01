@@ -9,17 +9,16 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.mithras.structures.NeuralModel;
 import org.mithras.structures.State;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class MetricsView
@@ -34,7 +33,7 @@ public class MetricsView
             // Load the FXML file
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MetricsView.fxml")));
             // Set up the scene with a size and stylesheet
-            Scene scene = new Scene(root, 1200, 1000);
+            Scene scene = new Scene(root, 1200, 800);
             scene.getStylesheets().add(StyleUtil.getCss());
 
             // Set the model name and initialize charts
@@ -42,7 +41,8 @@ public class MetricsView
             State.setModelName(modelName);
             setup(scene);
             Button backButton = (Button) scene.lookup("#backbtn");
-            if (backButton != null) {
+            if (backButton != null)
+            {
                 backButton.toFront();
             }
             stage.setScene(scene);
@@ -58,7 +58,8 @@ public class MetricsView
         if (ModelManager.models.get(modelName) instanceof NeuralModel)
         {
             setupLineCharts(scene, statistics);
-        } else
+        }
+        else
         {
             setupCenteredVBox(scene, statistics);
         }
@@ -127,29 +128,29 @@ public class MetricsView
         Label accuracyLabel = new Label("Accuracy");
         accuracyLabel.setStyle("-fx-font-size: 18px;");
 
-        Label acc = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_accuracy.get(1).get(0)*100,
-                statistics.std_accuracy.get(1).get(0)*100));
+        Label acc = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_accuracy.get(1).get(0) * 100,
+                statistics.std_accuracy.get(1).get(0) * 100));
         acc.setStyle("-fx-font-size: 24px;");
 
         Label f1Label = new Label("F1");
         f1Label.setStyle("-fx-font-size: 18px;");
 
-        Label f1 = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_f1.get(1).get(0)*100,
-                statistics.std_f1.get(1).get(0)*100));
+        Label f1 = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_f1.get(1).get(0) * 100,
+                statistics.std_f1.get(1).get(0) * 100));
         f1.setStyle("-fx-font-size: 24px;");
 
         Label recallLabel = new Label("Recall");
         recallLabel.setStyle("-fx-font-size: 18px;");
 
-        Label re = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_recall.get(1).get(0)*100,
-                statistics.std_recall.get(1).get(0)*100));
+        Label re = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_recall.get(1).get(0) * 100,
+                statistics.std_recall.get(1).get(0) * 100));
         re.setStyle("-fx-font-size: 24px;");
 
         Label precisionLabel = new Label("Precision");
         precisionLabel.setStyle("-fx-font-size: 18px;");
 
-        Label pr = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_precision.get(1).get(0)*100,
-                statistics.std_precision.get(1).get(0)*100));
+        Label pr = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_precision.get(1).get(0) * 100,
+                statistics.std_precision.get(1).get(0) * 100));
         pr.setStyle("-fx-font-size: 24px;");
 
         VBox vbox = new VBox();

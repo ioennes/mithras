@@ -38,19 +38,24 @@ public abstract class BaseLayer
             if (layers.get(i) instanceof BaseConvolutional)
             {
                 updateConvolutionalShape(layers, i, (BaseConvolutional) layers.get(i));
-            } else if (layers.get(i) instanceof BasePool)
+            }
+            else if (layers.get(i) instanceof BasePool)
             {
                 updatePoolShape(layers, i, (BasePool) layers.get(i));
-            } else if (layers.get(i) instanceof BaseGlobalPool)
+            }
+            else if (layers.get(i) instanceof BaseGlobalPool)
             {
                 updateGlobalPoolShape(layers, i, (BaseGlobalPool) layers.get(i));
-            } else if (layers.get(i) instanceof Flatten)
+            }
+            else if (layers.get(i) instanceof Flatten)
             {
                 updateFlattenShape(layers, i, (Flatten) layers.get(i));
-            } else if (layers.get(i) instanceof Dense)
+            }
+            else if (layers.get(i) instanceof Dense)
             {
                 updateDenseShape(layers, i, (Dense) layers.get(i));
-            } else if (layers.get(i) instanceof Dropout)
+            }
+            else if (layers.get(i) instanceof Dropout)
             {
                 updateDropoutShape(layers, i, (Dropout) layers.get(i));
             }
@@ -72,8 +77,10 @@ public abstract class BaseLayer
 
             if (c.strides == null)
                 c.strides = new int[]{1, 1};
-            else if (c.strides.length == 1) c.strides = new int[]{c.strides[0], c.strides[0]};
-        } else if (c instanceof Conv1D)
+            else if (c.strides.length == 1)
+                c.strides = new int[]{c.strides[0], c.strides[0]};
+        }
+        else if (c instanceof Conv1D)
         {
             if (c.kernel_size == null)
                 c.kernel_size = new int[]{1};
@@ -139,10 +146,14 @@ public abstract class BaseLayer
      */
     public static boolean isDefaultValue(Object object)
     {
-        if (object instanceof Integer && (int) object == 0) return true;
-        if (object instanceof Float && (float) object == 0.0f) return true;
-        if (object instanceof String && ((String) object).isEmpty()) return true;
-        else return object == null;
+        if (object instanceof Integer && (int) object == 0)
+            return true;
+        if (object instanceof Float && (float) object == 0.0f)
+            return true;
+        if (object instanceof String && ((String) object).isEmpty())
+            return true;
+        else
+            return object == null;
     }
 
     abstract public ConnectionType getConnectionType();

@@ -11,8 +11,6 @@ public class leakyrelu extends BaseActivation
     public float alpha = 0.3f;
     String layerName = "leakyrelu";
 
-
-
     public WritableImage neuralFunction(WritableImage inputInstance)
     {
         int width = (int) inputInstance.getWidth();

@@ -11,7 +11,6 @@ public class relu extends BaseActivation
     public float max_value;
     public float negative_slope;
     public float threshold;
-    String layerName = "relu";
 
     public static float relu(float x)
     {
@@ -38,6 +37,4 @@ public class relu extends BaseActivation
         }
         return outputInstance;
     }
-
-
 }

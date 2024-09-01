@@ -35,7 +35,7 @@ public class NeuralNetworkLayerSelection
         try
         {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("NeuralNetworkLayerSelection.fxml")));
-            Scene scene = new Scene(root, 1200, 1000);
+            Scene scene = new Scene(root, 1200, 800);
             scene.getStylesheets().add(StyleUtil.getCss());
 
             this.modelName = modelName;

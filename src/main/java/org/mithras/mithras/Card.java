@@ -1,5 +1,6 @@
 package org.mithras.mithras;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -116,7 +117,8 @@ public class Card extends StackPane
     private void configureButtons(Node root)
     {
         Button edit = (Button) root.lookup("#editbtn");
-        edit.setOnAction(e -> {
+        edit.setOnAction(e ->
+        {
             try
             {
                 edit();
@@ -127,7 +129,8 @@ public class Card extends StackPane
         });
 
         Button view = (Button) root.lookup("#viewbtn");
-        view.setOnAction(e -> {
+        view.setOnAction(e ->
+        {
             try
             {
                 State.setModelName(modelName);
@@ -139,7 +142,8 @@ public class Card extends StackPane
         });
 
         Button configure = (Button) root.lookup("#configurebtn");
-        configure.setOnAction(e -> {
+        configure.setOnAction(e ->
+        {
             try
             {
                 configure();
@@ -150,7 +154,8 @@ public class Card extends StackPane
         });
 
         Button copy = (Button) root.lookup("#copybtn");
-        copy.setOnAction(e -> {
+        copy.setOnAction(e ->
+        {
             try
             {
                 copy();
@@ -161,7 +166,8 @@ public class Card extends StackPane
         });
 
         Button run = (Button) root.lookup("#runbtn");
-        run.setOnAction(e -> {
+        run.setOnAction(e ->
+        {
             try
             {
                 run();
@@ -172,7 +178,8 @@ public class Card extends StackPane
         });
 
         Button metrics = (Button) root.lookup("#metricsbtn");
-        metrics.setOnAction(e -> {
+        metrics.setOnAction(e ->
+        {
             try
             {
                 metrics();
@@ -215,15 +222,18 @@ public class Card extends StackPane
         if (getCardtype() == CardType.NeuralNetwork)
         {
             SceneManager.switchToNNLS(modelName);
-        } else if (getCardtype() == CardType.SVM)
+        }
+        else if (getCardtype() == CardType.SVM)
         {
             new ClassInputDialog<>().start(((SVMModel) ModelManager.models.get(modelName)).getSvm(), modelName, -1);
             System.out.println(ModelManager.models.get(modelName).toString());
-        } else if (getCardtype() == CardType.DecisionTreeClassifier || getCardtype() == CardType.DecisionTreeRegressor)
+        }
+        else if (getCardtype() == CardType.DecisionTreeClassifier || getCardtype() == CardType.DecisionTreeRegressor)
         {
             new ClassInputDialog<>().start(((TreeModel) ModelManager.models.get(modelName)).getTree(), modelName, -1);
             System.out.println(ModelManager.models.get(modelName).toString());
-        } else
+        }
+        else
         {
             SceneManager.switchToMain();
         }
@@ -235,14 +245,6 @@ public class Card extends StackPane
         {
             new ClassInputDialog<>().start(((NeuralModel) ModelManager.models.get(modelName)).getCompilationData(),
                     modelName, -1);
-        } else if (getCardtype() == CardType.SVM)
-        {
-            new ClassInputDialog<>().start(((SVMModel) ModelManager.models.get(modelName)).getConfigData(), modelName,
-                    -1);
-        } else if (getCardtype() == CardType.DecisionTreeClassifier || getCardtype() == CardType.DecisionTreeRegressor)
-        {
-            new ClassInputDialog<>().start(((TreeModel) ModelManager.models.get(modelName)).getConfigData(), modelName,
-                    -1);
         }
     }
 
@@ -251,7 +253,8 @@ public class Card extends StackPane
         if (getCardtype() == CardType.NeuralNetwork)
         {
             SceneManager.switchToDNNView(modelName);
-        } else
+        }
+        else
         {
             WritableImage img = SwingFXUtils.toFXImage(ModelManager.models.get(modelName).getPlot(), null);
             ImageView imageView = new ImageView(img);
@@ -266,7 +269,8 @@ public class Card extends StackPane
             imageView.fitWidthProperty().bind(stage.widthProperty());
             imageView.fitHeightProperty().bind(stage.heightProperty());
 
-            imageView.addEventFilter(ScrollEvent.SCROLL, event -> {
+            imageView.addEventFilter(ScrollEvent.SCROLL, event ->
+            {
                 if (event.isControlDown())
                 {
                     double deltaY = event.getDeltaY();
@@ -281,14 +285,18 @@ public class Card extends StackPane
                 }
             });
 
-            imageView.setOnMousePressed(event -> {
-                if (event.getButton() == MouseButton.MIDDLE) {
+            imageView.setOnMousePressed(event ->
+            {
+                if (event.getButton() == MouseButton.MIDDLE)
+                {
                     imageView.setUserData(new Point2D(event.getSceneX(), event.getSceneY()));
                 }
             });
 
-            imageView.setOnMouseDragged(event -> {
-                if (event.getButton() == MouseButton.MIDDLE) {
+            imageView.setOnMouseDragged(event ->
+            {
+                if (event.getButton() == MouseButton.MIDDLE)
+                {
                     Point2D dragDelta = (Point2D) imageView.getUserData();
                     imageView.setTranslateX(event.getSceneX() - dragDelta.getX());
                     imageView.setTranslateY(event.getSceneY() - dragDelta.getY());

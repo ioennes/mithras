@@ -26,7 +26,7 @@ public class DNNCodeView
         try
         {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("DNNCodeView.fxml")));
-            Scene scene = new Scene(root, 1200, 1000);
+            Scene scene = new Scene(root, 1200, 800);
 
             this.model = model;
 
@@ -47,10 +47,12 @@ public class DNNCodeView
                             {
                                 setText(null);
                                 setGraphic(null);
-                            } else
+                            }
+                            else
                             {
                                 setText(item.toString());
-                                setOnMouseClicked(event -> {
+                                setOnMouseClicked(event ->
+                                {
                                     if (event.getButton() == MouseButton.SECONDARY)
                                     {
                                         new ClassInputDialog<BaseLayer>().start(item, model.getName(), getIndex());
@@ -67,7 +69,8 @@ public class DNNCodeView
                     };
 
                     // Enable dragging
-                    cell.setOnDragDetected(event -> {
+                    cell.setOnDragDetected(event ->
+                    {
                         if (!cell.isEmpty())
                         {
                             Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
@@ -78,7 +81,8 @@ public class DNNCodeView
                         }
                     });
 
-                    cell.setOnDragOver(event -> {
+                    cell.setOnDragOver(event ->
+                    {
                         if (event.getGestureSource() != cell &&
                                 event.getDragboard().hasString())
                         {
@@ -87,7 +91,8 @@ public class DNNCodeView
                         event.consume();
                     });
 
-                    cell.setOnDragDropped(event -> {
+                    cell.setOnDragDropped(event ->
+                    {
                         Dragboard db = event.getDragboard();
                         boolean success = false;
                         if (db.hasString())

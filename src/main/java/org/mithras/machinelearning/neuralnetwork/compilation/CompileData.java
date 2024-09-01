@@ -6,9 +6,10 @@ import java.util.regex.Pattern;
 
 public class CompileData
 {
+    private final String metrics = "\"accuracy\",  tf.keras.metrics.Precision(), tf.keras.metrics.Recall(), f1_score";
+    private final int kfold = 1;
     public String optimizer;
     public String loss;
-    public String metrics;
     public String[] lossWeights;
     public String weightedMetrics;
     public boolean runEagerly;
@@ -18,7 +19,6 @@ public class CompileData
     public int epochs;
     public float validationSplit;
     public int batchSize;
-    public int kfold = 1;
 
     public void getCompileData(StringBuilder sb, String modelName)
     {

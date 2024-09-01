@@ -8,8 +8,6 @@ import org.mithras.machinelearning.neuralnetwork.layers.BaseActivation;
 
 public class sigmoid extends BaseActivation
 {
-    String layerName = "sigmoid";
-
     public static float sigmoid(float x)
     {
         return (float) (1 / (1 + Math.exp(-x)));
@@ -35,6 +33,4 @@ public class sigmoid extends BaseActivation
         }
         return outputInstance;
     }
-
-
 }

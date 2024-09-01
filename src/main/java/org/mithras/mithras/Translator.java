@@ -105,7 +105,7 @@ public class Translator
             case "pssShards" -> "PSS Shards";
             case "epochs" -> "Epochs";
             case "batchSize" -> "Batch Size";
-            case "validationSplit" -> "Validation Split";
+            case "validationSplit" -> "Validation Split (%)";
 
             // Others
             case "environment" -> "Python Binary Path";
@@ -192,6 +192,18 @@ public class Translator
             case "Gain" -> "Gain to be applied to the activation function";
             case "Minimum Value" -> "Lower bound of the range of random values to generate";
             case "Maximum Value" -> "Upper bound of the range of random values to generate";
+
+            case "Optimizer" -> "Optimization Algorithm to Use";
+            case "Loss" -> "Loss Function to Minimize";
+            case "Loss Weights" -> "Weights to apply to the loss";
+            case "Metrics" -> "Metrics to Monitor";
+            case "Weighted Metrics" -> "List of metrics to be evaluated and weighted by sample_weight or class_weight";
+            case "Run Eagerly" -> "Whether to run the model eagerly";
+            case "Steps Per Execution" -> "Number of batches to run during each tf.function call";
+            case "JIT Compile" -> "Whether to compile the model using XLA";
+            case "PSS Shards" -> "Number of shards to split the model's variables into";
+            case "Epochs" -> "Number of epochs to train the model";
+            case "Validation Split (%)" -> "Fraction of the training data to be used as validation data";
 
             default -> text;
         };

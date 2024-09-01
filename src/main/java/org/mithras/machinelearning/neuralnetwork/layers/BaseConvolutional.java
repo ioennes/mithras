@@ -11,13 +11,6 @@ import org.mithras.machinelearning.neuralnetwork.layers.activationPkg.sigmoid;
 public abstract class BaseConvolutional extends BaseLayer implements Activatable
 {
     private final ConnectionType connectionType = ConnectionType.FULLY_CONNECTED;
-    String layerName = "BaseConvolutional";
-    @JsonProperty("trainable")
-    private boolean trainable = true;
-    @JsonProperty("dtype")
-    private String dtype;
-    @JsonProperty("data_format")
-    private String data_format;
     @JsonProperty("filters")
     public int filters = 32;
     @JsonProperty("kernel_size")
@@ -48,8 +41,13 @@ public abstract class BaseConvolutional extends BaseLayer implements Activatable
     public String kernel_constraint;
     @JsonProperty("bias_constraint")
     public String bias_constraint;
-
-
+    String layerName = "BaseConvolutional";
+    @JsonProperty("trainable")
+    private boolean trainable = true;
+    @JsonProperty("dtype")
+    private String dtype;
+    @JsonProperty("data_format")
+    private String data_format;
 
     @Override
     public ConnectionType getConnectionType()

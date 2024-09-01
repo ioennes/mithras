@@ -1,10 +1,9 @@
 package org.mithras.machinelearning.neuralnetwork.layers.corePkg;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.mithras.machinelearning.neuralnetwork.layers.Activatable;
 import org.mithras.machinelearning.neuralnetwork.layers.BaseLayer;
 
-public class Dense extends BaseLayer implements Activatable
+public class Dense extends BaseLayer
 {
     private final ConnectionType connectionType = ConnectionType.FULLY_CONNECTED;
     @JsonProperty("units")
@@ -33,17 +32,9 @@ public class Dense extends BaseLayer implements Activatable
     public String dtype = "float32";
     String layerName = "Dense";
 
-
-
     @Override
     public ConnectionType getConnectionType()
     {
         return connectionType;
-    }
-
-    @Override
-    public String getActivation()
-    {
-        return activation;
     }
 }

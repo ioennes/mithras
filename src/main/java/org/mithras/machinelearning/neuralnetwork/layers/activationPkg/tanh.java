@@ -6,10 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class tanh extends BaseActivation
 {
-    String layerName = "tanh";
-
-
-
     public BufferedImage neuralFunction(BufferedImage inputInstance)
     {
         for (int y = 0; y < inputInstance.getHeight(); y++)

@@ -5,7 +5,4 @@ import org.mithras.machinelearning.neuralnetwork.layers.BaseActivation;
 public class gelu extends BaseActivation
 {
     public boolean approximate = false;
-    String layerName = "gelu";
-
-
 }

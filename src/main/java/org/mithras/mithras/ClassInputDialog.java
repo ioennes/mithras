@@ -71,8 +71,7 @@ public class ClassInputDialog<T>
      * @throws IOException            If there is an error loading the FXML
      * @throws IllegalAccessException If there is an error accessing a field
      */
-    public void initialize(T object) throws IOException, IllegalAccessException
-    {
+    public void initialize(T object) throws IOException, IllegalAccessException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ClassInputDialog.fxml"));
         loader.setController(this);
         Parent root = loader.load();
@@ -84,20 +83,20 @@ public class ClassInputDialog<T>
         dialogStage.setTitle(object.getClass().getSimpleName() + " Input");
         dialogStage.setScene(scene);
 
-        setRowConstraints(gridPane, 40, object.getClass().getFields().length + 2);
+        Field[] fields = object.getClass().getFields();
+        if (fields.length == 0) {
+            ok();
+            dialogStage.close();
+            return;
+        }
 
+        setRowConstraints(gridPane, 40, fields.length + 2);
         boolean hasFields = displayFieldsAndInput(object, gridPane);
 
         scene.getStylesheets().add(StyleUtil.getCss());
 
         Platform.runLater(() -> dialogStage.sizeToScene());
         dialogStage.showAndWait();
-
-        if (!hasFields)
-        {
-            ok();
-            dialogStage.close();
-        }
     }
 
     /**
@@ -133,7 +132,8 @@ public class ClassInputDialog<T>
     private boolean displayFieldsAndInput(T object, GridPane gp) throws IllegalAccessException
     {
         Field[] fields = object.getClass().getFields();
-        if (fields.length == 0) return false;
+        if (fields.length == 0)
+            return false;
 
         addHeadersToGridPane(gp, object.getClass().getSimpleName());
 
@@ -195,13 +195,30 @@ public class ClassInputDialog<T>
 
         Object fieldValue = field.get(object);
         Node inputNode;
-        if (field.getType().equals(Boolean.TYPE))
+        if (field.getName().equals("optimizer"))
+        {
+            String[] optimizers = {"SGD", "Adam", "RMSprop", "Adagrad", "Adadelta"};
+            inputNode = createComboBox(optimizers, (String) fieldValue);
+        }
+        else if (field.getName().equals("loss"))
+        {
+            String[] losses = {"mean_squared_error", "categorical_crossentropy", "binary_crossentropy", "mean_absolute_error"};
+            inputNode = createComboBox(losses, (String) fieldValue);
+        }
+        else if (field.getName().equals("activation"))
+        {
+            String[] activations = {"relu", "sigmoid", "softmax", "tanh", "elu", "gelu"};
+            inputNode = createComboBox(activations, (String) fieldValue);
+        }
+        else if (field.getType().equals(Boolean.TYPE))
         {
             inputNode = createCheckBox(fieldValue);
-        } else if (field.getType().equals(Path.class))
+        }
+        else if (field.getType().equals(Path.class))
         {
             inputNode = createFileChooserButton(field, fieldValue);
-        } else
+        }
+        else
         {
             inputNode = createTextField(field, fieldValue);
         }
@@ -218,7 +235,8 @@ public class ClassInputDialog<T>
     private CheckBox createCheckBox(Object fieldValue)
     {
         CheckBox cb = new CheckBox();
-        if ((boolean) fieldValue) cb.fire();
+        if ((boolean) fieldValue)
+            cb.fire();
         return cb;
     }
 
@@ -378,7 +396,8 @@ public class ClassInputDialog<T>
         if (inputString.isEmpty())
         {
             field.set(cls, null);
-        } else
+        }
+        else
         {
             String[] numericStrings = inputString.split(",");
             int[] intValues = new int[numericStrings.length];
@@ -408,7 +427,8 @@ public class ClassInputDialog<T>
         if (inputString.isEmpty())
         {
             field.set(cls, null);
-        } else
+        }
+        else
         {
             String[] stringValues = inputString.split(",");
             for (int i = 0; i < stringValues.length; i++)
@@ -443,6 +463,17 @@ public class ClassInputDialog<T>
         ok();
     }
 
+    private ComboBox<String> createComboBox(String[] options, String selectedValue)
+    {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll(options);
+        if (selectedValue != null && !selectedValue.isEmpty())
+        {
+            comboBox.setValue(selectedValue);
+        }
+        return comboBox;
+    }
+
     /**
      * Binds the data and closes the dialog.
      */
@@ -457,7 +488,8 @@ public class ClassInputDialog<T>
                 {
                     ((NeuralModel) model).getLayers().set(index, (BaseLayer) object);
                     BaseLayer.updateShapeParameters(((NeuralModel) model).getLayers());
-                } else
+                }
+                else
                 {
                     ((NeuralModel) model).getLayers().add((BaseLayer) object);
                     BaseLayer.updateShapeParameters(((NeuralModel) model).getLayers());

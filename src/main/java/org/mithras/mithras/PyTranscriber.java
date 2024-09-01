@@ -69,6 +69,7 @@ public class PyTranscriber
         sb.append("import pandas as pd").append("\n");
         sb.append("import numpy as np").append("\n");
         sb.append("import json").append("\n");
+        sb.append("import cv2").append("\n");
         sb.append("from tensorflow.keras import models, layers").append("\n");
         sb.append("from tensorflow.keras.models import Sequential").append("\n");
         sb.append("from sklearn.tree import *").append("\n");
@@ -100,10 +101,21 @@ public class PyTranscriber
     {
         if (ModelManager.models.get(model) instanceof NeuralModel)
         {
+            sb.append("""
+                    def f1_score(y_true, y_pred):
+                        precision = tf.keras.metrics.Precision()(y_true, y_pred)
+                        recall = tf.keras.metrics.Recall()(y_true, y_pred)
+                        return 2 * ((precision * recall) / (precision + recall + tf.keras.backend.epsilon()))
+                    """).append("\n\n");
             sb.append(ModelManager.models.get(model).toString()).append("\n\n");
             sb.append("with open('metrics.json', 'w') as f:\n");
             sb.append("\tjson.dump(history.history, f)\n");
             return;
+        }
+
+        if (((NeuralModel) ModelManager.models.get(model)).getModelType().equals("Classification"))
+        {
+            sb.append("tf.one_hot(y, tf.size(tf.unique(y).y))");
         }
 
         sb.append(ModelManager.models.get(model).toString()).append("\n\n");
@@ -117,9 +129,9 @@ public class PyTranscriber
                     'val_recall': [recall_score(yts, y_pred)],
                     'val_f1_score': [f1_score(yts, y_pred)],
                 }
-
+                
                 metrics_json = json.dumps(metrics, indent=4)
-
+                
                 with open('./metrics.json', 'w') as f:
                     f.write(metrics_json)
                 """);
@@ -132,44 +144,44 @@ public class PyTranscriber
                         indices = np.random.choice(np.arange(X.shape[0]), num_instances, replace=False)
                         X_subset = X.iloc[indices]
                         y_subset = np.array(y)[indices]
-
+                    
                         # Reduce to two dimensions using PCA
                         pca = PCA(n_components=2)
                         X_pca = pca.fit_transform(X_subset)
-
+                    
                         # Fit the SVM to the reduced data
                         svm.fit(X_pca, y_subset)
-
+                    
                         # Create a mesh grid for plotting the decision boundary
                         h = 4  # Step size in the mesh
                         x_min, x_max = X_pca[:, 0].min() - 1, X_pca[:, 0].max() + 1
                         y_min, y_max = X_pca[:, 1].min() - 1, X_pca[:, 1].max() + 1
                         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                                              np.arange(y_min, y_max, h))
-
+                    
                         Z = svm.predict(np.c_[xx.ravel(), yy.ravel()])
                         Z = Z.reshape(xx.shape)
-
+                    
                         plt.figure(figsize=(10, 6))
                         plt.contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.coolwarm)
                         plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y_subset, edgecolors='k', marker='o', cmap=plt.cm.coolwarm)
-
+                    
                         # Plot the decision boundary (hyperplane)
                         ax = plt.gca()
                         xlim = ax.get_xlim()
                         ylim = ax.get_ylim()
-
+                    
                         # Create grid to evaluate model
                         xx = np.linspace(xlim[0], xlim[1], 30)
                         yy = np.linspace(ylim[0], ylim[1], 30)
                         YY, XX = np.meshgrid(yy, xx)
                         xy = np.vstack([XX.ravel(), YY.ravel()]).T
                         Z = svm.decision_function(xy).reshape(XX.shape)
-
+                    
                         # Plot decision boundary and margins
                         ax.contour(XX, YY, Z, colors='k', levels=[-1, 0, 1], alpha=0.5,
                                    linestyles=['--', '-', '--'])
-
+                    
                         plt.title('SVM Decision Boundary and Dataset')
                         plt.xlabel('Principal Component 1')
                         plt.ylabel('Principal Component 2')
@@ -177,7 +189,8 @@ public class PyTranscriber
                     """);
             sb.append("plot_svm_dataset(").append(ModelManager.models.get(model).getName())
                     .append(", xts, yts)");
-        } else if (ModelManager.models.get(model) instanceof TreeModel)
+        }
+        else if (ModelManager.models.get(model) instanceof TreeModel)
         {
             sb.append("fig, ax = subplots(figsize=(12,12))\n");
             sb.append("plot_tree(").append(ModelManager.models.get(model).getName()).append(", feature_names=X.columns," +

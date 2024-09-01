@@ -23,7 +23,8 @@ public class StringComposer
         if (fieldName.contains("regularizer") || fieldName.contains("initializer"))
         {
             output.append(fieldName).append("=").append(value).append(", ");
-        } else
+        }
+        else
         {
             output.append(fieldName).append("=\"").append(value).append("\", ");
         }
@@ -89,10 +90,12 @@ public class StringComposer
             if (isStringField(fieldType) && !isDefaultValue(value))
             {
                 appendStringValue(output, fieldName, value);
-            } else if (isArrayField(fieldType, int.class))
+            }
+            else if (isArrayField(fieldType, int.class))
             {
                 appendArrayValue(output, fieldName, (int[]) value);
-            } else
+            }
+            else
             {
                 appendOtherValue(output, fieldName, value);
             }

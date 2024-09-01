@@ -9,10 +9,12 @@ public class NeuralModel extends Model
 {
     private final ArrayList<BaseLayer> layers = new ArrayList<>();
     private final CompileData compilationData = new CompileData();
+    private String modelType = "";
 
-    public NeuralModel(String name)
+    public NeuralModel(String name, String modelType)
     {
         super(name);
+        this.modelType = modelType;
     }
 
     public ArrayList<BaseLayer> getLayers()
@@ -33,6 +35,11 @@ public class NeuralModel extends Model
     public CompileData getCompilationData()
     {
         return compilationData;
+    }
+
+    public String getModelType()
+    {
+        return modelType;
     }
 
     @Override

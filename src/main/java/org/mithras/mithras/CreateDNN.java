@@ -23,7 +23,7 @@ public class CreateDNN
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CreateDNN.fxml"));
             loader.setControllerFactory(param -> this);
             Parent root = loader.load();
-            scene = new Scene(root, 1200, 1000);
+            scene = new Scene(root, 1200, 800);
             scene.getStylesheets().add(StyleUtil.getCss());
 
             ComboBox cb = (ComboBox) scene.lookup("#dnntype");
@@ -43,7 +43,7 @@ public class CreateDNN
         if (!ModelManager.models.containsKey(modelName))
         {
             ModelManager.cards.add(new Card(modelName, modelType, Card.CardType.NeuralNetwork));
-            ModelManager.models.put(modelName, new NeuralModel(modelName));
+            ModelManager.models.put(modelName, new NeuralModel(modelName, modelType));
             SceneManager.switchToMain();
         }
     }
@@ -56,8 +56,8 @@ public class CreateDNN
     private void initializeTypesDNN(ComboBox<String> cb)
     {
         cb.setItems(FXCollections.observableArrayList(
-                "Artificial Neural Network",
-                "Convolutional Neural Network"
+                "Classification",
+                "Regression"
         ));
     }
 }

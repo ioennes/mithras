@@ -3,7 +3,6 @@ package org.mithras.mithras;
 import org.mithras.structures.DNNDeserializer;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,10 +42,10 @@ public class ModelExtractor
         String code =
                 """
                         \nfrom tensorflow.keras.layers import deserialize as layer_deserialize
-
+                        
                         json_string = ""
-
-
+                        
+                        
                         def replace_format(d):
                             if isinstance(d, dict):
                                 if "class_name" in d and "config" in d:
@@ -58,22 +57,22 @@ public class ModelExtractor
                                 return [replace_format(v) for v in d]
                             else:
                                 return d
-
-
+                        
+                        
                         count = 0
-
+                        
                         def model_summary_to_json(model):
                             global count, json_string
                             model_config = {"model_name": f"dnn{count}", "layers": []}
                             count += 1
-
+                        
                             # Add the input layer to the JSON
                             input_layer_config = {"Input": {"shape": [dim for dim in model.input_shape if dim is not None],
                                                             "dtype": 'float32',
                                                             "sparse": False,
                                                             "name": 'input'}}
                             model_config["layers"].append(input_layer_config)
-
+                        
                             for layer in model.layers:
                                 layer_config = layer.get_config()
                                 explicit_config = {}
@@ -88,15 +87,15 @@ public class ModelExtractor
                                 explicit_config.pop("name", None)
                                 model_config["layers"].append({layer.__class__.__name__: explicit_config})
                             json_string += f"{json.dumps(replace_format(json.loads(json.dumps(model_config, indent=4))), indent=4)}\\n\\n"
-
-
+                        
+                        
                         def svmdt_summary_to_json(model):
                             global count, json_string
                             model_config = {"model_name": f"model{count}", "parameters": {}}
                             count += 1
                             model_config["parameters"] = model.get_params()
                             json_string += f"{json.dumps(replace_format(json.loads(json.dumps(model_config, indent=4))), indent=4)}\\n\\n"
-
+                        
                         global_vars = dict(globals())
                         for name, obj in global_vars.items():
                             if isinstance(obj, Sequential):
@@ -105,10 +104,10 @@ public class ModelExtractor
                                 svmdt_summary_to_json(obj)
                             elif isinstance(obj, (SVC, NuSVC, LinearSVC)):
                                 svmdt_summary_to_json(obj)
-
+                        
                         with open("jsonmodel.json", "w") as file:
                             file.write(json_string)
-                                        """;
+                        """;
 
         StringBuilder imports = new StringBuilder("\n");
         PyTranscriber.writeImports(imports);

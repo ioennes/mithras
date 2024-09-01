@@ -1,5 +1,6 @@
 package org.mithras.mithras;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,8 +18,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.mithras.machinelearning.neuralnetwork.layers.BaseLayer;
+import org.mithras.structures.DatasetHandler;
 import org.mithras.structures.NeuralModel;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,67 +38,83 @@ public class NeuralNetworkView
     private final int whThreshold = 80;
     private final int vgap = 40;
     private final int hgap = 100;
+    private final LinkedHashMap<Integer, Group> layerPositions = new LinkedHashMap<>();
     ArrayList<WritableImage> oldImages = new ArrayList<>();
     ArrayList<WritableImage> newImages = new ArrayList<>();
     private String modelName;
     private Stage stage;
     private Pane pane;
     private WritableImage image;
-    private final LinkedHashMap<Integer, Group> layerPositions = new LinkedHashMap<>();
 
     public void initializeScene(Stage stage, String modelName)
     {
         try
         {
+            // Load the FXML root
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("DNNView.fxml")));
 
+            // Initialize model name and stage
             this.modelName = modelName;
             this.stage = stage;
-            pane = new Pane();
 
+            // Initialize main pane
+            pane = new Pane();
             assignImage();
 
+            // Set up ScrollPane to contain the Pane
             ScrollPane scrollPane = new ScrollPane();
             scrollPane.setContent(pane);
             scrollPane.setFitToHeight(true);
             scrollPane.setFitToWidth(true);
 
+            // Add the FXML root to the Pane
             pane.getChildren().add(root);
 
+            // Look up the back button in the FXML and remove it from the root
             Button backButton = (Button) root.lookup("#backbtn");
             pane.getChildren().remove(backButton);
 
+            // Create a StackPane for the back button
             StackPane stackPane = new StackPane();
             stackPane.getChildren().add(backButton);
             StackPane.setAlignment(backButton, Pos.BOTTOM_CENTER);
             StackPane.setMargin(backButton, new Insets(0, 0, 25, 0));
 
+            // Bind StackPane size to the Pane size
             stackPane.prefWidthProperty().bind(pane.widthProperty());
             stackPane.prefHeightProperty().bind(pane.heightProperty());
 
+            // Add the StackPane to the Pane
             pane.getChildren().add(stackPane);
 
+            // Draw initial layers and connections
             drawLayers((int) stage.getHeight());
             connectLayers((int) stage.getHeight());
 
-            scrollPane.setStyle("-fx-background-color: black");
-            pane.setStyle("-fx-background-color: black");
+            // Set up the scene with the scroll pane and add the stylesheet
             Scene scene = new Scene(scrollPane, 1200, 1000);
             scene.getStylesheets().add(StyleUtil.getCss());
             stage.setScene(scene);
 
-            stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-                pane.getChildren().clear();
-                pane.getChildren().add(root);
+            // Add a listener to handle window resizing
+            stage.heightProperty().addListener((observable, oldValue, newValue) ->
+            {
+                pane.getChildren().clear(); // Clear existing elements
+                pane.getChildren().add(root); // Re-add the FXML root
+
                 try
                 {
-                    drawLayers(newValue.intValue());
+                    drawLayers(newValue.intValue()); // Redraw the layers
                 } catch (ExecutionException | InterruptedException e)
                 {
                     throw new RuntimeException(e);
                 }
-                connectLayers(newValue.intValue());
+
+                connectLayers(newValue.intValue()); // Reconnect the layers
+
+                pane.getChildren().add(stackPane); // Re-add the StackPane with the back button
             });
+
         } catch (IOException | InterruptedException | ExecutionException e)
         {
             throw new RuntimeException(e);
@@ -104,22 +123,30 @@ public class NeuralNetworkView
 
     private void assignImage()
     {
-//        if (DatasetHandler.trainPath != null)
-//        {
-//            BufferedImage tmp;
-//            if (image == null)
-//            {
-//                tmp = DatasetHandler.getRandomImage();
-//                image = SwingFXUtils.toFXImage(tmp, null);
-//            }
-//            try
-//            {
-//                oldImages.add(image);
-//            } catch (Exception e)
-//            {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        try
+        {
+            if (image == null)
+            {
+                BufferedImage tmp = DatasetHandler.getImage();
+                if (tmp != null)
+                {
+                    image = SwingFXUtils.toFXImage(tmp, null);
+                }
+                else
+                {
+                    System.out.println("No image found in the dataset.");
+                }
+            }
+            if (image != null)
+            {
+                oldImages.clear();
+                oldImages.add(image);
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException("Error while assigning image.", e);
+        }
     }
 
     private void drawLayers(int stageHeight) throws ExecutionException, InterruptedException
@@ -149,7 +176,7 @@ public class NeuralNetworkView
                 Rectangle node = new Rectangle(width, height);
                 node.setArcHeight(10);
                 node.setArcWidth(15);
-                node.setStroke(Color.WHITE);
+                node.setStroke(Color.BLACK);
                 node.setStrokeWidth(2);
                 node.setFill(Color.TRANSPARENT);
 
@@ -158,7 +185,6 @@ public class NeuralNetworkView
 
                 group.getChildren().add(node);
 
-                // Add the image, if it exists
                 for (int cnt = 0; cnt < units; cnt++)
                 {
                     if (!oldImages.isEmpty())
@@ -175,7 +201,8 @@ public class NeuralNetworkView
                         imageView.setX(startX);
                         imageView.setY(startY);
 
-                        imageView.setOnMouseClicked(event -> {
+                        imageView.setOnMouseClicked(event ->
+                        {
                             Stage popup = new Stage();
                             ImageView popupImageView = new ImageView(nftmp);
                             popupImageView.setFitHeight(500);
@@ -201,19 +228,22 @@ public class NeuralNetworkView
 
             startX += width + hgap;
         }
-        pane.setStyle("-fx-background-color: black");
     }
 
     private WritableImage getImage(ArrayList<WritableImage> images, int d, int i)
     {
-        if (images.isEmpty()) return null;
-        if (images.size() == 1) return images.get(0);
-        if (images.size() != d) return images.get(new Random().nextInt(images.size()));
+        if (images.isEmpty())
+            return null;
+        if (images.size() == 1)
+            return images.get(0);
+        if (images.size() != d)
+            return images.get(new Random().nextInt(images.size()));
         return images.get(i);
     }
 
     private void connectLayers(int stageHeight)
     {
+        int fromX = 15;
         ArrayList<BaseLayer> layers = ((NeuralModel) ModelManager.models.get(modelName)).getLayers();
         for (int i = 0; i < layers.size() - 1; i++)
         {
@@ -225,25 +255,28 @@ public class NeuralNetworkView
 
             int[] dim1 = ((NeuralModel) ModelManager.models.get(modelName)).getLayers().get(i).getDimensions();
             int[] dim2 = ((NeuralModel) ModelManager.models.get(modelName)).getLayers().get(i + 1).getDimensions();
-            int fromX = 15 + (width_from + hgap) * i;
-            int toX = 15 + (width_to + hgap) * (i + 1);
+            int toX = fromX + width_from + hgap;
 
             int fromY = (stageHeight / 2) - ((Math.min(unitThreshold, dim1[dim1.length - 1]) *
                     (Math.min(whThreshold, dim1[0]) + vgap)) / 2);
             int toY = (stageHeight / 2) - ((Math.min(unitThreshold, dim2[dim2.length - 1]) *
                     (Math.min(whThreshold, dim2[0]) + vgap)) / 2);
 
+            System.out.println(fromX + " " + toX);
 
             if (layers.get(i + 1).getConnectionType() == BaseLayer.ConnectionType.FULLY_CONNECTED)
             {
                 fullyConnectLayers(dim1, dim2, fromX, toX, fromY, toY);
-            } else if (layers.get(i + 1).getConnectionType() == BaseLayer.ConnectionType.ONE_TO_ONE)
+            }
+            else if (layers.get(i + 1).getConnectionType() == BaseLayer.ConnectionType.ONE_TO_ONE)
             {
                 OTOConnectLayers(dim1, dim2, fromX, toX, fromY, toY);
-            } else
+            }
+            else
             {
                 throw new RuntimeException("Unknown connection type");
             }
+            fromX = toX;
         }
     }
 
@@ -265,8 +298,8 @@ public class NeuralNetworkView
             height2 = Math.min(whThreshold, dim2[1]);
         }
 
-        int startY1 = (int) ((stage.getHeight() / 2) - ((height1 * units1 + (units1 - 1) * vgap) / 2));
-        int startY2Initial = (int) ((stage.getHeight() / 2) - ((height2 * units2 + (units2 - 1) * vgap) / 2));
+        int startY1 = (int) ((stage.getHeight() / 2) - ((double) (height1 * units1 + (units1 - 1) * vgap) / 2));
+        int startY2Initial = (int) ((stage.getHeight() / 2) - ((double) (height2 * units2 + (units2 - 1) * vgap) / 2));
 
         for (int i = 0; i < units1; i++)
         {
@@ -279,7 +312,7 @@ public class NeuralNetworkView
                 int y2 = startY2 + (height2 / 2);
 
                 Line line = new Line(x1, y1, x2, y2);
-                line.setStroke(Color.WHITE);
+                line.setStroke(Color.BLACK);
                 line.setStrokeWidth(1);
                 pane.getChildren().add(line);
 
@@ -311,8 +344,8 @@ public class NeuralNetworkView
             height2 = Math.min(whThreshold, dim2[1]);
         }
 
-        int startY1 = (int) ((stage.getHeight() / 2) - ((height1 * units1 + (units1 - 1) * vgap) / 2));
-        int startY2 = (int) ((stage.getHeight() / 2) - ((height2 * units2 + (units2 - 1) * vgap) / 2));
+        int startY1 = (int) ((stage.getHeight() / 2) - ((double) (height1 * units1 + (units1 - 1) * vgap) / 2));
+        int startY2 = (int) ((stage.getHeight() / 2) - ((double) (height2 * units2 + (units2 - 1) * vgap) / 2));
 
         int units = Math.min(units1, units2);
 
@@ -324,7 +357,7 @@ public class NeuralNetworkView
             int y2 = startY2 + (height2 / 2);
 
             Line line = new Line(x1, y1, x2, y2);
-            line.setStroke(Color.WHITE);
+            line.setStroke(Color.BLACK);
             line.setStrokeWidth(1);
             pane.getChildren().add(line);
 

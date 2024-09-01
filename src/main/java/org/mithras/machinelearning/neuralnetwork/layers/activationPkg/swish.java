@@ -4,5 +4,4 @@ import org.mithras.machinelearning.neuralnetwork.layers.BaseActivation;
 
 public class swish extends BaseActivation
 {
-    String layerName = "swish";
 }

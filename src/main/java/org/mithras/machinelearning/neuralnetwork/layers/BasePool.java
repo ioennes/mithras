@@ -5,6 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BasePool extends BaseLayer
 {
     private final ConnectionType connectionType = ConnectionType.ONE_TO_ONE;
+    @JsonProperty("pool_size")
+    public int[] pool_size;
+    @JsonProperty("strides")
+    public int[] strides;
+    @JsonProperty("padding")
+    public String padding;
     String layerName = "BasePool";
     @JsonProperty("trainable")
     private boolean trainable = true;
@@ -12,15 +18,6 @@ public class BasePool extends BaseLayer
     private String dtype;
     @JsonProperty("data_format")
     private String data_format;
-    @JsonProperty("pool_size")
-    public int[] pool_size;
-    @JsonProperty("strides")
-    public int[] strides;
-    @JsonProperty("padding")
-    public String padding;
-
-
-
 
     @Override
     public ConnectionType getConnectionType()
