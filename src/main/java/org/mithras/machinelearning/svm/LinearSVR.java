@@ -10,6 +10,5 @@ public class LinearSVR extends SVM
     public float intercept_scaling = 1.0f;
     public boolean dual = true;
     public int verbose = 0;
-    public int random_state = 0;
     public int max_iter = 1000;
 }

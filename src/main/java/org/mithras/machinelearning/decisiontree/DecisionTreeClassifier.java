@@ -9,7 +9,6 @@ public class DecisionTreeClassifier extends Tree
     public int min_samples_leaf = 1;
     public float min_weight_fraction_leaf = 0.0f;
     public int max_features;
-    public int random_state;
     public int max_leaf_nodes;
     public float min_impurity_decrease = 0.0f;
     // class weight

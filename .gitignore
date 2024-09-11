@@ -37,3 +37,15 @@ build/
 ### Mac OS ###
 .DS_Store
 /venv/
+
+## MORE ##
+
+./build_output/
+./jsonmodel.json
+./*.py
+./*.json
+./*.log
+./MithrasApp/
+./MithrasJRE/
+./out/
+./target/

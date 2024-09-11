@@ -77,7 +77,8 @@ public class PyTranscriber
         sb.append("from sklearn.model_selection import train_test_split").append("\n");
         sb.append("from sklearn.decomposition import PCA").append("\n");
         sb.append("from sklearn.metrics import *").append("\n");
-        sb.append("from sklearn.model_selection import KFold").append("\n\n");
+        sb.append("from tensorflow.keras.initializers import *").append("\n\n");
+        sb.append("from tensorflow.keras.regularizers import *").append("\n\n");
     }
 
     public static void writeDataset(StringBuilder sb)
@@ -101,21 +102,10 @@ public class PyTranscriber
     {
         if (ModelManager.models.get(model) instanceof NeuralModel)
         {
-            sb.append("""
-                    def f1_score(y_true, y_pred):
-                        precision = tf.keras.metrics.Precision()(y_true, y_pred)
-                        recall = tf.keras.metrics.Recall()(y_true, y_pred)
-                        return 2 * ((precision * recall) / (precision + recall + tf.keras.backend.epsilon()))
-                    """).append("\n\n");
             sb.append(ModelManager.models.get(model).toString()).append("\n\n");
             sb.append("with open('metrics.json', 'w') as f:\n");
             sb.append("\tjson.dump(history.history, f)\n");
             return;
-        }
-
-        if (((NeuralModel) ModelManager.models.get(model)).getModelType().equals("Classification"))
-        {
-            sb.append("tf.one_hot(y, tf.size(tf.unique(y).y))");
         }
 
         sb.append(ModelManager.models.get(model).toString()).append("\n\n");
@@ -127,7 +117,6 @@ public class PyTranscriber
                     'val_accuracy': [accuracy_score(yts, y_pred)],
                     'val_precision': [precision_score(yts, y_pred)],
                     'val_recall': [recall_score(yts, y_pred)],
-                    'val_f1_score': [f1_score(yts, y_pred)],
                 }
                 
                 metrics_json = json.dumps(metrics, indent=4)

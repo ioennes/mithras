@@ -98,10 +98,6 @@ public class MetricsView
         acc_series.setName("Accuracy");
         addData(acc_series, statistics.avg_accuracy.get(idx));
 
-        XYChart.Series<Number, Number> f1_series = new XYChart.Series<>();
-        f1_series.setName("F1");
-        addData(f1_series, statistics.avg_f1.get(idx));
-
         XYChart.Series<Number, Number> recall_series = new XYChart.Series<>();
         recall_series.setName("Recall");
         addData(recall_series, statistics.avg_recall.get(idx));
@@ -110,7 +106,7 @@ public class MetricsView
         pres_series.setName("Precision");
         addData(pres_series, statistics.avg_precision.get(idx));
 
-        lineChart.getData().addAll(loss_series, acc_series, f1_series, recall_series, pres_series);
+        lineChart.getData().addAll(acc_series, recall_series, pres_series);
 
         return lineChart;
     }
@@ -132,13 +128,6 @@ public class MetricsView
                 statistics.std_accuracy.get(1).get(0) * 100));
         acc.setStyle("-fx-font-size: 24px;");
 
-        Label f1Label = new Label("F1");
-        f1Label.setStyle("-fx-font-size: 18px;");
-
-        Label f1 = new Label(String.format("%.2f%% ±%.2f%%", statistics.avg_f1.get(1).get(0) * 100,
-                statistics.std_f1.get(1).get(0) * 100));
-        f1.setStyle("-fx-font-size: 24px;");
-
         Label recallLabel = new Label("Recall");
         recallLabel.setStyle("-fx-font-size: 18px;");
 
@@ -158,7 +147,7 @@ public class MetricsView
         vbox.setSpacing(20);
         vbox.setPadding(new Insets(20));
 
-        vbox.getChildren().addAll(accuracyLabel, acc, f1Label, f1, recallLabel, re, precisionLabel, pr);
+        vbox.getChildren().addAll(accuracyLabel, acc, recallLabel, re, precisionLabel, pr);
 
         ((Pane) scene.getRoot()).getChildren().add(vbox);
     }

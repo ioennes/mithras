@@ -44,8 +44,8 @@ public abstract class BaseConvolutional extends BaseLayer implements Activatable
     String layerName = "BaseConvolutional";
     @JsonProperty("trainable")
     private boolean trainable = true;
-    @JsonProperty("dtype")
-    private String dtype;
+    //@JsonProperty("dtype")
+    //private String dtype;
     @JsonProperty("data_format")
     private String data_format;
 

@@ -12,6 +12,5 @@ public class LinearSVC extends SVM
     public float intercept_scaling = 1.0f;
     // class weight : UNDERSTAND LATER
     public int verbose = 0;
-    public int random_state;
     public int max_iter = 1000;
 }

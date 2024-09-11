@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class CompileData
 {
-    private final String metrics = "\"accuracy\",  tf.keras.metrics.Precision(), tf.keras.metrics.Recall(), f1_score";
+    private final String metrics = "\"accuracy\",  tf.keras.metrics.Precision(), tf.keras.metrics.Recall()";
     private final int kfold = 1;
     public String optimizer;
     public String loss;
@@ -28,7 +28,7 @@ public class CompileData
         if (loss != null && !loss.isEmpty())
             sb.append("\tloss=\"").append(loss).append("\",\n");
         if (metrics != null && !metrics.isEmpty())
-            sb.append("\tmetrics=[\"").append(metrics).append("\"],\n");
+            sb.append("\tmetrics=[").append(metrics).append("],\n");
         if (lossWeights != null && lossWeights.length != 0)
             sb.append("\tloss_weights=").append(Arrays.toString(lossWeights)).append(",\n");
         if (weightedMetrics != null && !weightedMetrics.isEmpty())

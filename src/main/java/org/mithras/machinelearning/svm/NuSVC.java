@@ -15,5 +15,4 @@ public class NuSVC extends SVM
     public int max_iter = -1;
     public String decision_function_shape = "ovr";
     public boolean break_ties = false;
-    public int random_state;
 }

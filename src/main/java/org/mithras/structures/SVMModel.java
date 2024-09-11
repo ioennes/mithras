@@ -21,7 +21,7 @@ public class SVMModel extends Model
         s.append(getName()).append(" = ").append(svm.getClass().getSimpleName()).append("(");
         compose(s, getSvm());
         s.append("\n\n");
-        s.append("xtr, xts, ytr, yts = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True, random_state=43)\n");
+        s.append("xtr, xts, ytr, yts = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True)\n");
         s.append(getName()).append(".fit(xtr, ytr)\n");
         return s.toString();
     }

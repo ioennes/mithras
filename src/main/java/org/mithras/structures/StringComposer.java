@@ -61,7 +61,7 @@ public class StringComposer
     {
         for (Field field : object.getClass().getFields())
         {
-            if (field.getName().equals("kfold"))
+            if (field.getName().equals("kfold") || field.getName().equals("dtype"))
             {
                 continue;
             }

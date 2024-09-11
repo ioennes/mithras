@@ -66,7 +66,8 @@ public class CreateTree
     private void initializeTypesTree(ComboBox<String> cb)
     {
         cb.setItems(FXCollections.observableArrayList(
-                "Decision Tree Classifier"
+                "Decision Tree Classifier",
+                "Decision Tree Regressor"
         ));
     }
 }

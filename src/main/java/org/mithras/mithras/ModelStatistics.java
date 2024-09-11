@@ -2,6 +2,9 @@ package org.mithras.mithras;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mithras.machinelearning.svm.SVM;
+import org.mithras.structures.SVMModel;
+import org.mithras.structures.TreeModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,6 +101,14 @@ public class ModelStatistics
 
         for (int i = 0; i < num_iterations; i++)
         {
+            if (ModelManager.models.get(modelName) instanceof SVMModel)
+            {
+                (((SVMModel) ModelManager.models.get(modelName)).getSvm()).random_state = i;
+            }
+            else if (ModelManager.models.get(modelName) instanceof TreeModel)
+            {
+                (((TreeModel) ModelManager.models.get(modelName)).getTree()).random_state = i;
+            }
             JSONObject metrics = PyTranscriber.run(modelName);
             for (String key : metrics.keySet())
             {
@@ -117,9 +128,6 @@ public class ModelStatistics
                     case "accuracy":
                         accuracy.get(0).add(metricAL.isEmpty() ? new ArrayList<>() : metricAL);
                         break;
-                    case "f1_score":
-                        f1.get(0).add(metricAL.isEmpty() ? new ArrayList<>() : metricAL);
-                        break;
                     case "recall":
                         recall.get(0).add(metricAL.isEmpty() ? new ArrayList<>() : metricAL);
                         break;
@@ -131,9 +139,6 @@ public class ModelStatistics
                         break;
                     case "val_accuracy":
                         accuracy.get(1).add(metricAL.isEmpty() ? new ArrayList<>() : metricAL);
-                        break;
-                    case "val_f1_score":
-                        f1.get(1).add(metricAL.isEmpty() ? new ArrayList<>() : metricAL);
                         break;
                     case "val_recall":
                         recall.get(1).add(metricAL.isEmpty() ? new ArrayList<>() : metricAL);
