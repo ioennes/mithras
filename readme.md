@@ -12,5 +12,7 @@ For this app to work, you must have the following installed:
 ## Linux
 
 Install the tool from the Releases tab.
-Once installed, use **chmod +x **mithras_linux**
+
+Once installed, use **chmod +x mithras_linux**
+
 Finally, use **./mithras_linux** to execute the tool
