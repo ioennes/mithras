@@ -11,8 +11,13 @@ For this app to work, you must have the following installed:
 
 ## Linux
 
-Install the tool from the Releases tab.
+- Install the tool from the Releases tab.
+- Once installed, use `chmod +x mithras_linux`
+- Finally, use `./mithras_linux` to execute the tool
 
-Once installed, use **chmod +x mithras_linux**
+## Any Platform
 
-Finally, use **./mithras_linux** to execute the tool
+This is a workaround until the tool is packaged for all platforms.
+- Clone the repo
+- Browse for `src/main/java/org/mithras/mithras/MainApp.java`
+- Run it in an IDE
