@@ -1,6 +1,10 @@
 package org.mithras.mithras;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mithras.structures.DNNDeserializer;
+import org.mithras.structures.SVMDeserializer;
+import org.mithras.structures.TreeDeserializer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,14 +22,19 @@ public class ModelExtractor
     {
         path = filepath;
         prepareFile();
+        extractMithrasCode();
         injectCode();
-        Process p = new ProcessBuilder("python", path.toString()).start();
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "./pyrun.py");
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        Process p = processBuilder.start();
         p.waitFor();
         System.out.println(path);
         parse();
+        SceneManager.switchToMain();
     }
 
-    private static void prepareFile() throws IOException
+    private static void prepareFile() throws IOException, InterruptedException
     {
         if (!path.toString().endsWith(".py"))
         {
@@ -35,6 +44,54 @@ public class ModelExtractor
         Path new_path = Path.of("./pyrun.py");
         Files.copy(path, new_path, StandardCopyOption.REPLACE_EXISTING);
         path = new_path;
+    }
+
+    private static void extractMithrasCode() throws IOException, InterruptedException
+    {
+        StringBuilder code = new StringBuilder();
+        boolean isMithrasSection = false;
+        boolean mithrasFound = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toString())))
+        {
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                if (line.contains("# Mithras"))
+                {
+                    isMithrasSection = !isMithrasSection;
+                    mithrasFound = true;
+                    continue;
+                }
+                if (isMithrasSection || !mithrasFound)
+                {
+                    code.append(line).append(System.lineSeparator());
+                }
+            }
+        }
+
+        if (!mithrasFound)
+        {
+            // If no Mithras section is found, assume the whole file
+            try (BufferedReader reader = new BufferedReader(new FileReader(path.toString())))
+            {
+                String line;
+                while ((line = reader.readLine()) != null)
+                {
+                    code.append(line).append(System.lineSeparator());
+                }
+            }
+        }
+
+        Path newPath = Path.of("./mithras_extraction.py");
+        Files.writeString(newPath, code.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+        ProcessBuilder processBuilder = new ProcessBuilder("python", newPath.toString());
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        Process p = processBuilder.start();
+        p.waitFor();
+        System.out.println(newPath);
     }
 
     private static void injectCode() throws IOException
@@ -68,7 +125,7 @@ public class ModelExtractor
                         
                             # Add the input layer to the JSON
                             input_layer_config = {"Input": {"shape": [dim for dim in model.input_shape if dim is not None],
-                                                            "dtype": 'float32',
+                                                            #"dtype": 'float32',
                                                             "sparse": False,
                                                             "name": 'input'}}
                             model_config["layers"].append(input_layer_config)
@@ -91,9 +148,11 @@ public class ModelExtractor
                         
                         def svmdt_summary_to_json(model):
                             global count, json_string
-                            model_config = {"model_name": f"model{count}", "parameters": {}}
+                            model_config = {"model_name": f"model{count}", "model_type": type(model).__name__, "parameters": {}}
                             count += 1
                             model_config["parameters"] = model.get_params()
+                            if "class_weight" in model_config["parameters"]:
+                                    del model_config["parameters"]["class_weight"]
                             json_string += f"{json.dumps(replace_format(json.loads(json.dumps(model_config, indent=4))), indent=4)}\\n\\n"
                         
                         global_vars = dict(globals())
@@ -102,7 +161,7 @@ public class ModelExtractor
                                 model_summary_to_json(obj)
                             elif isinstance(obj, (DecisionTreeClassifier, DecisionTreeRegressor)):
                                 svmdt_summary_to_json(obj)
-                            elif isinstance(obj, (SVC, NuSVC, LinearSVC)):
+                            elif isinstance(obj, (SVC, NuSVC, LinearSVC, LinearSVR)):
                                 svmdt_summary_to_json(obj)
                         
                         with open("jsonmodel.json", "w") as file:
@@ -143,7 +202,21 @@ public class ModelExtractor
         String[] jsons = everything.split("\\n\\n");
         for (String json : jsons)
         {
-            DNNDeserializer.deserializeDNN(json);
+            JsonNode node = new ObjectMapper().readTree(json);
+            String modelType = node.get("model_type").asText();
+
+            if (modelType.contains("SV"))
+            {
+                SVMDeserializer.deserializeSVM(json);
+            }
+            else if (modelType.contains("Tree"))
+            {
+                TreeDeserializer.deserializeTree(json);
+            }
+            else
+            {
+                DNNDeserializer.deserializeDNN(json);
+            }
         }
     }
 }

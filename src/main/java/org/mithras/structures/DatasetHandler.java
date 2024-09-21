@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class DatasetHandler
 {
-    private static File dataset;
+    private static File dataset = null;
     private static boolean isNumeric = true;
     private static boolean isRegression;
     private static boolean isGrayscale = true;
@@ -64,6 +64,11 @@ public class DatasetHandler
 
     public static String preprocessFile()
     {
+        if (dataset == null)
+        {
+            return null;
+        }
+
         String sb = "filepath = \"" + dataset.getAbsolutePath() + "\"\n";
 
         if (DatasetHandler.isNumeric())

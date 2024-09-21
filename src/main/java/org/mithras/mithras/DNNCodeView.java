@@ -26,7 +26,7 @@ public class DNNCodeView
         try
         {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("DNNCodeView.fxml")));
-            Scene scene = new Scene(root, 1200, 800);
+            Scene scene = new Scene(root);
 
             this.model = model;
 

@@ -1,36 +1,56 @@
 package org.mithras.mithras;
 
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class LoadingScreen
+public class LoadingScreen extends Application
 {
-    private final Stage stage;
+    private static Stage loadingStage;
 
-    public LoadingScreen()
+    public static void show()
     {
-        stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UNDECORATED);
-
-        StackPane root = new StackPane();
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        root.getChildren().add(progressIndicator);
-        Scene scene = new Scene(root, 100, 100);
-        stage.setScene(scene);
+        Platform.runLater(() ->
+        {
+            System.out.println("LoadingScreen.show() called");
+            if (loadingStage == null)
+            {
+                new LoadingScreen().start(new Stage());
+            }
+            else
+            {
+                loadingStage.show();
+            }
+        });
     }
 
-    public void show()
+    public static void hide()
     {
-        stage.show();
+        Platform.runLater(() ->
+        {
+            System.out.println("LoadingScreen.hide() called");
+            if (loadingStage != null)
+            {
+                loadingStage.close();
+            }
+        });
     }
 
-    public void hide()
+    @Override
+    public void start(Stage primaryStage)
     {
-        stage.hide();
+        loadingStage = primaryStage;
+        primaryStage.initStyle(StageStyle.UTILITY);
+        Label loadingLabel = new Label("Please wait...");
+        loadingLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        StackPane root = new StackPane(loadingLabel);
+        Scene scene = new Scene(root, 300, 200);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Loading...");
+        primaryStage.show();
     }
 }

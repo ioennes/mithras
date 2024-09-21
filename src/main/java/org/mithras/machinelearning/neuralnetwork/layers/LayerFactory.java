@@ -114,27 +114,27 @@ public class LayerFactory
             {
                 return new MaxPool2D();
             }
-            case "AveragePooling1D" ->
+            case "AveragePool1D" ->
             {
                 return new AveragePool1D();
             }
-            case "AveragePooling2D" ->
+            case "AveragePool2D" ->
             {
                 return new AveragePool2D();
             }
-            case "GlobalMaxPooling1D" ->
+            case "GlobalMaxPool1D" ->
             {
                 return new GlobalMaxPool1D();
             }
-            case "GlobalMaxPooling2D" ->
+            case "GlobalMaxPool2D" ->
             {
                 return new GlobalMaxPool2D();
             }
-            case "GlobalAveragePooling1D" ->
+            case "GlobalAveragePool1D" ->
             {
                 return new GlobalAveragePool1D();
             }
-            case "GlobalAveragePooling2D" ->
+            case "GlobalAveragePool2D" ->
             {
                 return new GlobalAveragePool2D();
             }

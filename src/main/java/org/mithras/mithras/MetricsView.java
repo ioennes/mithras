@@ -33,7 +33,7 @@ public class MetricsView
             // Load the FXML file
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MetricsView.fxml")));
             // Set up the scene with a size and stylesheet
-            Scene scene = new Scene(root, 1200, 800);
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(StyleUtil.getCss());
 
             // Set the model name and initialize charts
@@ -70,9 +70,14 @@ public class MetricsView
         HBox hbox = new HBox();
         hbox.setSpacing(20);
         hbox.setPadding(new Insets(20));
+        hbox.setPrefWidth(scene.getWidth());
+        hbox.setPrefHeight(scene.getHeight());
 
         LineChart<Number, Number> trainChart = createLineChart("Training", statistics);
         LineChart<Number, Number> validChart = createLineChart("Validation", statistics);
+
+        trainChart.prefWidthProperty().bind(hbox.widthProperty().multiply(0.5));
+        validChart.prefWidthProperty().bind(hbox.widthProperty().multiply(0.5));
 
         hbox.getChildren().addAll(trainChart, validChart);
 
@@ -83,16 +88,16 @@ public class MetricsView
     {
         int idx = title.equals("Training") ? 0 : 1;
 
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
+        NumberAxis xAxis = new NumberAxis(1, statistics.avg_accuracy.get(idx).size(), 1);
         xAxis.setLabel("Epoch");
-        yAxis.setLabel("Value");
+        xAxis.setTickUnit(1);
+        xAxis.setMinorTickVisible(false);
+
+        NumberAxis yAxis = new NumberAxis(0, 100, 10);
+        yAxis.setLabel("Value (%)");
+
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle(title);
-
-        XYChart.Series<Number, Number> loss_series = new XYChart.Series<>();
-        loss_series.setName("Loss");
-        addData(loss_series, statistics.avg_loss.get(idx));
 
         XYChart.Series<Number, Number> acc_series = new XYChart.Series<>();
         acc_series.setName("Accuracy");
@@ -115,7 +120,7 @@ public class MetricsView
     {
         for (int i = 0; i < avg.size(); i++)
         {
-            series.getData().add(new XYChart.Data<>(i + 1, avg.get(i)));
+            series.getData().add(new XYChart.Data<>(i + 1, avg.get(i) * 100));
         }
     }
 

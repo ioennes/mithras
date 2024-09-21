@@ -15,7 +15,7 @@ public class ModelSelection
         try
         {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ModelSelection.fxml")));
-            Scene scene = new Scene(root, 1200, 800);
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(StyleUtil.getCss());
 
             stage.setScene(scene);

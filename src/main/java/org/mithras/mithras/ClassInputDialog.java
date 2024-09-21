@@ -14,7 +14,13 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.mithras.machinelearning.decisiontree.DecisionTreeClassifier;
+import org.mithras.machinelearning.decisiontree.DecisionTreeRegressor;
 import org.mithras.machinelearning.neuralnetwork.layers.BaseLayer;
+import org.mithras.machinelearning.svm.LinearSVC;
+import org.mithras.machinelearning.svm.LinearSVR;
+import org.mithras.machinelearning.svm.SVC;
 import org.mithras.structures.Model;
 import org.mithras.structures.NeuralModel;
 
@@ -71,11 +77,14 @@ public class ClassInputDialog<T>
      * @throws IOException            If there is an error loading the FXML
      * @throws IllegalAccessException If there is an error accessing a field
      */
-    public void initialize(T object) throws IOException, IllegalAccessException {
+    public void initialize(T object) throws IOException, IllegalAccessException
+    {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ClassInputDialog.fxml"));
         loader.setController(this);
         Parent root = loader.load();
-        Scene scene = new Scene(root, 650, -1);
+        Scene scene = new Scene(root);
+
+        dialogStage.initStyle(StageStyle.UTILITY);
 
         GridPane gridPane = (GridPane) scene.lookup("#inputgrid");
         gridPane.setPadding(new Insets(20));
@@ -84,7 +93,8 @@ public class ClassInputDialog<T>
         dialogStage.setScene(scene);
 
         Field[] fields = object.getClass().getFields();
-        if (fields.length == 0) {
+        if (fields.length == 0)
+        {
             ok();
             dialogStage.close();
             return;
@@ -194,7 +204,7 @@ public class ClassInputDialog<T>
         gp.add(new Text(translate(field.getType().toString())), 1, row);
 
         Object fieldValue = field.get(object);
-        Node inputNode;
+        Node inputNode = null;
         if (field.getName().equals("optimizer"))
         {
             String[] optimizers = {"SGD", "Adam", "RMSprop", "Adagrad", "Adadelta"};
@@ -202,13 +212,60 @@ public class ClassInputDialog<T>
         }
         else if (field.getName().equals("loss"))
         {
-            String[] losses = {"mean_squared_error", "categorical_crossentropy", "binary_crossentropy", "mean_absolute_error"};
+            String[] losses;
+            if (object instanceof SVC || object instanceof LinearSVC)
+            {
+                losses = new String[]{"hinge", "squared_hinge"};
+            }
+            else if (object instanceof LinearSVR)
+            {
+                losses = new String[]{"epsilon_insensitive", "squared_epsilon_insensitive"};
+            }
+            else
+            {
+                losses = new String[]{"mean_squared_error", "categorical_crossentropy", "binary_crossentropy", "mean_absolute_error"};
+            }
             inputNode = createComboBox(losses, (String) fieldValue);
+        }
+        else if (field.getName().equals("criterion"))
+        {
+            String[] crits;
+            if (object instanceof DecisionTreeRegressor)
+            {
+                crits = new String[]{"mean_squared_error", "mean_absolute_error", "friedman_mse", "poisson"};
+                inputNode = createComboBox(crits, (String) fieldValue);
+            }
+            else if (object instanceof DecisionTreeClassifier)
+            {
+                crits = new String[]{"gini", "entropy", "log_loss"};
+                inputNode = createComboBox(crits, (String) fieldValue);
+            }
+        }
+        else if (field.getName().equals("splitter"))
+        {
+            String[] splitters = {"best", "random"};
+            inputNode = createComboBox(splitters, (String) fieldValue);
+        }
+        else if (field.getName().equals("kernel"))
+        {
+            String[] kernels = {"rbf", "linear", "poly", "sigmoid"};
+            inputNode = createComboBox(kernels, (String) fieldValue);
         }
         else if (field.getName().equals("activation"))
         {
             String[] activations = {"relu", "sigmoid", "softmax", "tanh", "elu", "gelu"};
             inputNode = createComboBox(activations, (String) fieldValue);
+        }
+        else if (field.getName().contains("regularizer"))
+        {
+            String[] regularizers = {"", "L1", "L1L2", "L2", "OrthogonalRegularizer"};
+            inputNode = createComboBox(regularizers, (String) fieldValue);
+        }
+        else if (field.getName().contains("initializer"))
+        {
+            String[] initializers = {"", "Constant", "GlorotNormal", "GlorotUniform", "HeNormal", "HeUniform",
+                    "Identity", "LecunNormal", "LecunUniform", "Ones", "Orthogonal",};
+            inputNode = createComboBox(initializers, (String) fieldValue);
         }
         else if (field.getType().equals(Boolean.TYPE))
         {
@@ -350,7 +407,7 @@ public class ClassInputDialog<T>
         if (node instanceof CheckBox)
             return ((CheckBox) node).isSelected() ? "true" : "false";
         else if (node instanceof ComboBox<?>)
-            return ((ComboBox<?>) node).getValue().toString();
+            return ((ComboBox<?>) node).getValue() != null ? ((ComboBox<?>) node).getValue().toString() : "";
         else
             return ((TextField) node).getText();
     }

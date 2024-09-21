@@ -14,23 +14,22 @@ public class Dense extends BaseLayer
     public String activation = null;
     @JsonProperty("use_bias")
     public boolean use_bias = true;
-    @JsonProperty("kernel_initializer")
-    public String kernel_initializer = null;
-    @JsonProperty("bias_initializer")
-    public String bias_initializer = null;
-    @JsonProperty("kernel_regularizer")
-    public String kernel_regularizer = null;
-    @JsonProperty("bias_regularizer")
-    public String bias_regularizer = null;
-    @JsonProperty("activity_regularizer")
-    public String activity_regularizer = null;
     @JsonProperty("kernel_constraint")
     public String kernel_constraint = null;
     @JsonProperty("bias_constraint")
     public String bias_constraint = null;
+    @JsonProperty("kernel_initializer")
+    private String kernel_initializer = null;
+    @JsonProperty("bias_initializer")
+    private String bias_initializer = null;
+    @JsonProperty("kernel_regularizer")
+    private String kernel_regularizer = null;
+    @JsonProperty("bias_regularizer")
+    private String bias_regularizer = null;
+    @JsonProperty("activity_regularizer")
+    private String activity_regularizer = null;
     @JsonProperty("dtype")
-    public String dtype = "float32";
-    String layerName = "Dense";
+    private String dtype = "float32";
 
     @Override
     public ConnectionType getConnectionType()

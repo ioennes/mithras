@@ -1,9 +1,15 @@
 package org.mithras.mithras;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextArea;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import org.mithras.structures.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,15 +37,57 @@ public class PyTranscriber
             e.printStackTrace();
         }
 
-        Process p = new ProcessBuilder(environment.toString(), filename + ".py").start();
-        System.out.println(environment.toString() + " " + filename + ".py");
+        ProcessBuilder processBuilder = new ProcessBuilder(environment.toString(), filename + ".py");
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
+        processBuilder.redirectError(ProcessBuilder.Redirect.PIPE);
+        Process p = processBuilder.start();
+
+        StringBuilder output = new StringBuilder();
+        StringBuilder errorOutput = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+             BufferedReader errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream())))
+        {
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                output.append(line).append("\n");
+            }
+            while ((line = errorReader.readLine()) != null)
+            {
+                errorOutput.append(line).append("\n");
+            }
+        }
+
         p.waitFor();
+
+        Path metrics_path = Path.of("metrics.json");
+        if (Files.notExists(metrics_path))
+        {
+            Platform.runLater(() ->
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error, will keep previous run, if any.");
+                TextArea textArea = new TextArea(output + "\n" + errorOutput);
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+                alert.getDialogPane().setContent(textArea);
+                alert.showAndWait();
+            });
+            return null;
+        }
 
         if (!(ModelManager.models.get(model) instanceof NeuralModel))
         {
             ModelManager.models.get(model).setPlot(Path.of("plot.png"));
         }
-        return new JSONObject(new String(Files.readAllBytes(Path.of("metrics.json"))));
+
+        JSONObject metrics = new JSONObject(new String(Files.readAllBytes(metrics_path)));
+        Files.deleteIfExists(metrics_path);
+        Files.deleteIfExists(Path.of("plot.png"));
+        return metrics;
     }
 
     public static void transcribe()
@@ -130,7 +178,7 @@ public class PyTranscriber
             sb.append("""
                     def plot_svm_dataset(svm, X, y, num_instances=50):
                         # Ensure we have more than one class in the subset
-                        indices = np.random.choice(np.arange(X.shape[0]), num_instances, replace=False)
+                        indices = np.random.choice(np.arange(X.shape[0]), min(len(X), num_instances), replace=False)
                         X_subset = X.iloc[indices]
                         y_subset = np.array(y)[indices]
                     
@@ -142,7 +190,7 @@ public class PyTranscriber
                         svm.fit(X_pca, y_subset)
                     
                         # Create a mesh grid for plotting the decision boundary
-                        h = 4  # Step size in the mesh
+                        h = 0.02  # Step size in the mesh
                         x_min, x_max = X_pca[:, 0].min() - 1, X_pca[:, 0].max() + 1
                         y_min, y_max = X_pca[:, 1].min() - 1, X_pca[:, 1].max() + 1
                         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),

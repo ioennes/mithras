@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <StackPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
            minWidth="-Infinity"
-           prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21-internal"
+           prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21-internal"
            fx:controller="org.mithras.mithras.MainController">
     <children>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">

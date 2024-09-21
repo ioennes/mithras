@@ -27,21 +27,21 @@ public abstract class BaseConvolutional extends BaseLayer implements Activatable
     public String activation;
     @JsonProperty("use_bias")
     public boolean use_bias = true;
-    @JsonProperty("kernel_initializer")
-    public String kernel_initializer;
-    @JsonProperty("bias_initializer")
-    public String bias_initializer;
-    @JsonProperty("kernel_regularizer")
-    public String kernel_regularizer;
-    @JsonProperty("bias_regularizer")
-    public String bias_regularizer;
-    @JsonProperty("activity_regularizer")
-    public String activity_regularizer;
     @JsonProperty("kernel_constraint")
     public String kernel_constraint;
     @JsonProperty("bias_constraint")
     public String bias_constraint;
     String layerName = "BaseConvolutional";
+    @JsonProperty("kernel_initializer")
+    private String kernel_initializer;
+    @JsonProperty("bias_initializer")
+    private String bias_initializer;
+    @JsonProperty("kernel_regularizer")
+    private String kernel_regularizer;
+    @JsonProperty("bias_regularizer")
+    private String bias_regularizer;
+    @JsonProperty("activity_regularizer")
+    private String activity_regularizer;
     @JsonProperty("trainable")
     private boolean trainable = true;
     //@JsonProperty("dtype")

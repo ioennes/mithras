@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.stage.StageStyle;
 import org.mithras.machinelearning.neuralnetwork.layers.BaseLayer;
 import org.mithras.machinelearning.neuralnetwork.layers.convolutionPkg.Conv1D;
 import org.mithras.machinelearning.neuralnetwork.layers.convolutionPkg.Conv2D;
@@ -74,7 +77,13 @@ public class DNNDeserializer
             ModelManager.cards.add(new Card(modelName, "Neural", Card.CardType.NeuralNetwork));
         } catch (Exception e)
         {
-            e.printStackTrace();
+            Platform.runLater(() ->
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error deserializing the model");
+            });
         }
     }
 }

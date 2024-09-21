@@ -32,7 +32,15 @@ public class StringComposer
 
     public static void appendArrayValue(StringBuilder output, String fieldName, int[] array)
     {
-        String arrayString = Arrays.toString(array).replaceAll("[\\[\\]]", "");
+        String arrayString;
+        if (array.length == 1)
+        {
+            arrayString = array[0] + ",";
+        }
+        else
+        {
+            arrayString = Arrays.toString(array).replaceAll("[\\[\\]]", "");
+        }
         output.append(fieldName).append("=(").append(arrayString).append("), ");
     }
 

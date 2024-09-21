@@ -92,7 +92,7 @@ public class NeuralNetworkView
             connectLayers((int) stage.getHeight());
 
             // Set up the scene with the scroll pane and add the stylesheet
-            Scene scene = new Scene(scrollPane, 1200, 1000);
+            Scene scene = new Scene(scrollPane);
             scene.getStylesheets().add(StyleUtil.getCss());
             stage.setScene(scene);
 

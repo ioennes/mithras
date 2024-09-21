@@ -1,5 +1,7 @@
 package org.mithras.machinelearning.neuralnetwork.compilation;
 
+import org.mithras.structures.DatasetHandler;
+
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,17 +10,17 @@ public class CompileData
 {
     private final String metrics = "\"accuracy\",  tf.keras.metrics.Precision(), tf.keras.metrics.Recall()";
     private final int kfold = 1;
-    public String optimizer;
-    public String loss;
+    public String optimizer = "SGD";
+    public String loss = DatasetHandler.isRegression() ? "mean_squared_error" : "categorical_crossentropy";
     public String[] lossWeights;
     public String weightedMetrics;
     public boolean runEagerly;
     public int stepsPerExecution;
     public boolean jitCompile;
     public int pssShards;
-    public int epochs;
-    public float validationSplit;
-    public int batchSize;
+    public int epochs = 100;
+    public float validationSplit = 20.0f;
+    public int batchSize = 32;
 
     public void getCompileData(StringBuilder sb, String modelName)
     {

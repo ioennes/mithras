@@ -1,10 +1,12 @@
 package org.mithras.mithras;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.mithras.structures.DatasetHandler;
 import org.mithras.structures.NeuralModel;
 import org.mithras.structures.State;
@@ -80,6 +82,7 @@ public class SceneManager
     public static void openCSVBrowser() throws IOException
     {
         Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.initStyle(StageStyle.UTILITY);
         alert.setContentText("Is the dataset numeric or image-based?");
 
         ButtonType numericButton = new ButtonType("Numeric");
@@ -150,6 +153,11 @@ public class SceneManager
                 DatasetHandler.setDataset(file);
             }
         }
+        alert = new Alert(AlertType.CONFIRMATION);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Import Successful");
+        alert.setHeaderText("The dataset has been imported successfully.");
+        alert.showAndWait();
     }
 
     public static void openTranscriber() throws IOException

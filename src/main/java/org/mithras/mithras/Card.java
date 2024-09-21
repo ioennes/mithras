@@ -1,12 +1,12 @@
 package org.mithras.mithras;
 
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -15,6 +15,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.mithras.structures.NeuralModel;
 import org.mithras.structures.SVMModel;
 import org.mithras.structures.State;
@@ -171,9 +172,8 @@ public class Card extends StackPane
             try
             {
                 run();
-            } catch (IOException | InterruptedException ex)
+            } catch (IOException | InterruptedException ignored)
             {
-                throw new RuntimeException(ex);
             }
         });
 
@@ -246,6 +246,14 @@ public class Card extends StackPane
             new ClassInputDialog<>().start(((NeuralModel) ModelManager.models.get(modelName)).getCompilationData(),
                     modelName, -1);
         }
+        else
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("ERROR");
+            alert.setContentText("Configuration is only for neural network compilation. Perhaps you meant to edit?");
+            alert.showAndWait();
+        }
     }
 
     public void view() throws IOException
@@ -265,6 +273,7 @@ public class Card extends StackPane
             stage.setWidth(600);
             stage.setHeight(400);
             stage.setTitle("Model Plot");
+            stage.initStyle(StageStyle.UTILITY);
 
             imageView.fitWidthProperty().bind(stage.widthProperty());
             imageView.fitHeightProperty().bind(stage.heightProperty());
@@ -338,6 +347,6 @@ public class Card extends StackPane
      */
     public enum CardType
     {
-        NeuralNetwork, SVM, DecisionTreeClassifier, DecisionTreeRegressor
+        NeuralNetwork, SVM, DecisionTreeClassifier, DecisionTreeRegressor, Tree
     }
 }
