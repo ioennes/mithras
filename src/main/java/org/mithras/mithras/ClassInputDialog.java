@@ -100,8 +100,7 @@ public class ClassInputDialog<T>
             return;
         }
 
-        setRowConstraints(gridPane, 40, fields.length + 2);
-        boolean hasFields = displayFieldsAndInput(object, gridPane);
+        setRowConstraints(gridPane, 40, fields.length + 2, ExpertFields.isExpert());        boolean hasFields = displayFieldsAndInput(object, gridPane);
 
         scene.getStylesheets().add(StyleUtil.getCss());
 
@@ -115,15 +114,20 @@ public class ClassInputDialog<T>
      * @param gridPane The GridPane to set the constraints for
      * @param height   The height for the rows
      * @param rowCount The number of rows
+     * @param isExpert Use this to adjust for row length
      */
-    private void setRowConstraints(GridPane gridPane, int height, int rowCount)
+    private void setRowConstraints(GridPane gridPane, int height, int rowCount, boolean isExpert)
     {
         RowConstraints rowConstraints = new RowConstraints();
         rowConstraints.setMinHeight(height);
         rowConstraints.setPrefHeight(height);
         rowConstraints.setMaxHeight(height);
 
-        for (int i = 0; i < rowCount; i++)
+        int actualRowCount = isExpert ? rowCount : (int) Arrays.stream(object.getClass().getFields())
+                .filter(field -> !ExpertFields.isExpertField(field.getName()))
+                .count() + 2;
+
+        for (int i = 0; i < actualRowCount; i++)
         {
             gridPane.getRowConstraints().add(rowConstraints);
         }
@@ -147,9 +151,12 @@ public class ClassInputDialog<T>
 
         addHeadersToGridPane(gp, object.getClass().getSimpleName());
 
-        for (int i = 0; i < fields.length; i++)
+        int row = 4;
+        for (Field field : fields)
         {
-            addFieldToGridPane(gp, fields[i], object, i + 4);
+            if (!ExpertFields.isExpert() && ExpertFields.isExpertField(field.getName()))
+                continue;
+            addFieldToGridPane(gp, field, object, row++);
         }
         return true;
     }

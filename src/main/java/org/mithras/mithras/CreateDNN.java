@@ -70,8 +70,8 @@ public class CreateDNN
     private void initializeTypesDNN(ComboBox<String> cb)
     {
         cb.setItems(FXCollections.observableArrayList(
-                "Classification",
-                "Regression"
+                "Classification Neural Network",
+                "Regression Neural Network"
         ));
     }
 }

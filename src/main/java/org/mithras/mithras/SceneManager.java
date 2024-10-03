@@ -13,6 +13,8 @@ import org.mithras.structures.State;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 public class SceneManager
@@ -176,5 +178,7 @@ public class SceneManager
         {
             ModelExtractor.extractModels(file.toPath());
         }
+        Files.deleteIfExists(Path.of("./jsonmodel.json"));
+        Files.deleteIfExists(Path.of("./pyrun.py"));
     }
 }

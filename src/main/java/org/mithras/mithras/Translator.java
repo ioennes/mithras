@@ -110,6 +110,7 @@ public class Translator
             // Others
             case "environment" -> "Python Binary Path";
             case "filename" -> "File Name";
+            case "num_iterations" -> "Iterations";
 
             default -> text;
         };

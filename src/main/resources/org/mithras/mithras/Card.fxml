@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainpane" prefHeight="200.0" prefWidth="600.0"
-           styleClass="card" xmlns="http://javafx.com/javafx/21-internal">
+
+<StackPane fx:id="mainpane" prefHeight="200.0" prefWidth="600.0" styleClass="card" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Text fx:id="modelname" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Model Name"
-              StackPane.alignment="TOP_LEFT">
+        <Text fx:id="modelname" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Model Name" StackPane.alignment="TOP_LEFT">
             <font>
-                <Font name="Fira Code SemiBold" size="18.0"/>
+                <Font name="Fira Code SemiBold" size="18.0" />
             </font>
             <StackPane.margin>
-                <Insets left="30.0" top="30.0"/>
+                <Insets left="30.0" top="30.0" />
             </StackPane.margin>
         </Text>
-        <Text fx:id="modeltype" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Model Type"
-              StackPane.alignment="TOP_LEFT">
+        <Text fx:id="modeltype" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Model Type" StackPane.alignment="TOP_LEFT">
             <font>
-                <Font name="Fira Code Medium" size="16.0"/>
+                <Font name="Fira Code Medium" size="16.0" />
             </font>
             <StackPane.margin>
-                <Insets left="30.0" top="60.0"/>
+                <Insets left="30.0" top="60.0" />
             </StackPane.margin>
         </Text>
         <HBox alignment="BOTTOM_LEFT" spacing="10.0">
             <children>
-                <Button fx:id="runbtn" mnemonicParsing="false" text="RUN"/>
-                <Button fx:id="editbtn" mnemonicParsing="false" text="EDIT"/>
-                <Button fx:id="viewbtn" mnemonicParsing="false" text="VIEW"/>
-                <Button fx:id="configurebtn" mnemonicParsing="false" text="CONFIGURE"/>
-                <Button fx:id="metricsbtn" mnemonicParsing="false" text="METRICS"/>
-                <Button fx:id="copybtn" mnemonicParsing="false" text="COPY"/>
+                <Button fx:id="runbtn" mnemonicParsing="false" text="RUN" />
+                <Button fx:id="editbtn" mnemonicParsing="false" text="EDIT" />
+                <Button fx:id="viewbtn" mnemonicParsing="false" text="VIEW" />
+                <Button fx:id="configurebtn" mnemonicParsing="false" text="CONFIGURE" />
+                <Button fx:id="metricsbtn" mnemonicParsing="false" text="METRICS" />
+                <Button fx:id="copybtn" mnemonicParsing="false" text="COPY" />
             </children>
             <StackPane.margin>
-                <Insets bottom="20.0" left="20.0"/>
+                <Insets bottom="20.0" left="20.0" />
             </StackPane.margin>
         </HBox>
+        <ImageView fx:id="deleteIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets right="25.0" top="25.0" />
+            </StackPane.margin>
+        </ImageView>
+      <Button fx:id="deletebtn" alignment="CENTER_RIGHT" mnemonicParsing="false" text="DELETE" StackPane.alignment="BOTTOM_RIGHT">
+         <StackPane.margin>
+            <Insets bottom="20.0" right="20.0" />
+         </StackPane.margin>
+      </Button>
     </children>
 </StackPane>

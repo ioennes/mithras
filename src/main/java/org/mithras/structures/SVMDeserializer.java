@@ -36,6 +36,14 @@ public class SVMDeserializer
 
             SVMModel model = new SVMModel(modelName, svm);
             ModelManager.models.put(modelName, model);
+
+            modelType = switch (modelType)
+            {
+                case "LinearSVC" -> "Linear SVC";
+                case "LinearSVR" -> "Linear SVR";
+                default -> modelType;
+            };
+
             ModelManager.cards.add(new Card(modelName, modelType, Card.CardType.SVM));
         } catch (Exception e)
         {

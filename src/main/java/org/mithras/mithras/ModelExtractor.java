@@ -7,6 +7,7 @@ import org.mithras.structures.SVMDeserializer;
 import org.mithras.structures.TreeDeserializer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +18,7 @@ import java.nio.file.StandardOpenOption;
 public class ModelExtractor
 {
     private static Path path;
+    private static String mithrasCode = "";
 
     public static void extractModels(Path filepath) throws IOException, InterruptedException
     {
@@ -29,9 +31,10 @@ public class ModelExtractor
         processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
         Process p = processBuilder.start();
         p.waitFor();
-        System.out.println(path);
         parse();
         SceneManager.switchToMain();
+        Files.deleteIfExists(Path.of("./jsonmodel.json"));
+        Files.deleteIfExists(Path.of("./pyrun.py"));
     }
 
     private static void prepareFile() throws IOException, InterruptedException
@@ -41,9 +44,7 @@ public class ModelExtractor
             throw new IOException("File is not a Python file.");
         }
 
-        Path new_path = Path.of("./pyrun.py");
-        Files.copy(path, new_path, StandardCopyOption.REPLACE_EXISTING);
-        path = new_path;
+        Files.createFile(Path.of("./pyrun.py"));
     }
 
     private static void extractMithrasCode() throws IOException, InterruptedException
@@ -63,7 +64,7 @@ public class ModelExtractor
                     mithrasFound = true;
                     continue;
                 }
-                if (isMithrasSection || !mithrasFound)
+                if (isMithrasSection)
                 {
                     code.append(line).append(System.lineSeparator());
                 }
@@ -82,16 +83,10 @@ public class ModelExtractor
                 }
             }
         }
-
-        Path newPath = Path.of("./mithras_extraction.py");
-        Files.writeString(newPath, code.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-
-        ProcessBuilder processBuilder = new ProcessBuilder("python", newPath.toString());
-        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
-        Process p = processBuilder.start();
-        p.waitFor();
-        System.out.println(newPath);
+        else
+        {
+            mithrasCode = code.toString();
+        }
     }
 
     private static void injectCode() throws IOException
@@ -151,17 +146,17 @@ public class ModelExtractor
                             model_config = {"model_name": f"model{count}", "model_type": type(model).__name__, "parameters": {}}
                             count += 1
                             model_config["parameters"] = model.get_params()
-                            if "class_weight" in model_config["parameters"]:
+                            if ("class_weight" in model_config["parameters"]):
                                     del model_config["parameters"]["class_weight"]
                             json_string += f"{json.dumps(replace_format(json.loads(json.dumps(model_config, indent=4))), indent=4)}\\n\\n"
                         
                         global_vars = dict(globals())
-                        for name, obj in global_vars.items():
-                            if isinstance(obj, Sequential):
+                        for (name, obj) in global_vars.items():
+                            if (isinstance(obj, Sequential)):
                                 model_summary_to_json(obj)
-                            elif isinstance(obj, (DecisionTreeClassifier, DecisionTreeRegressor)):
+                            elif (isinstance(obj, (DecisionTreeClassifier, DecisionTreeRegressor))):
                                 svmdt_summary_to_json(obj)
-                            elif isinstance(obj, (SVC, NuSVC, LinearSVC, LinearSVR)):
+                            elif (isinstance(obj, (SVC, NuSVC, LinearSVC, LinearSVR))):
                                 svmdt_summary_to_json(obj)
                         
                         with open("jsonmodel.json", "w") as file:
@@ -171,8 +166,11 @@ public class ModelExtractor
         StringBuilder imports = new StringBuilder("\n");
         PyTranscriber.writeImports(imports);
 
-        Files.writeString(path, imports, StandardOpenOption.APPEND);
-        Files.writeString(path, code, StandardOpenOption.APPEND);
+        System.out.println(mithrasCode);
+
+        Files.writeString(Path.of("./pyrun.py"), imports, StandardOpenOption.APPEND);
+        Files.writeString(Path.of("./pyrun.py"), mithrasCode, StandardOpenOption.APPEND);
+        Files.writeString(Path.of("./pyrun.py"), code, StandardOpenOption.APPEND);
     }
 
     private static void parse() throws IOException
@@ -203,8 +201,7 @@ public class ModelExtractor
         for (String json : jsons)
         {
             JsonNode node = new ObjectMapper().readTree(json);
-            String modelType = node.get("model_type").asText();
-
+            String modelType = node.has("model_type") ? node.get("model_type").asText() : "DNN";
             if (modelType.contains("SV"))
             {
                 SVMDeserializer.deserializeSVM(json);

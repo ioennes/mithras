@@ -125,7 +125,7 @@ public class PyTranscriber
         sb.append("from sklearn.model_selection import train_test_split").append("\n");
         sb.append("from sklearn.decomposition import PCA").append("\n");
         sb.append("from sklearn.metrics import *").append("\n");
-        sb.append("from tensorflow.keras.initializers import *").append("\n\n");
+        sb.append("from tensorflow.keras.initializers import *").append("\n");
         sb.append("from tensorflow.keras.regularizers import *").append("\n\n");
     }
 

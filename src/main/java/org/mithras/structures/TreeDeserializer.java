@@ -30,9 +30,15 @@ public class TreeDeserializer
                 default -> throw new IllegalStateException("Unexpected value: " + modelType);
             };
 
+
             TreeModel model = new TreeModel(modelName, tree);
+
+            System.out.println(model.toString());
+            System.out.println(model.getName());
             ModelManager.models.put(modelName, model);
-            ModelManager.cards.add(new Card(modelName, modelType, Card.CardType.Tree));
+            ModelManager.cards.add(new Card(modelName,
+                    modelType.equals("DecisionTreeClassifier") ? "Decision Tree Classifier" : "Decision Tree Regressor",
+                    modelType.equals("DecisionTreeClassifier") ? Card.CardType.DecisionTreeClassifier : Card.CardType.DecisionTreeRegressor));
         } catch (Exception e)
         {
             Platform.runLater(() ->

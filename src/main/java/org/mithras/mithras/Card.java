@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
@@ -25,6 +26,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * The Card class extends StackPane and represents a card in the application.
@@ -188,6 +190,18 @@ public class Card extends StackPane
                 throw new RuntimeException(ex);
             }
         });
+
+        Button delete = (Button) root.lookup("#deletebtn");
+        delete.setOnAction(e ->
+        {
+            try
+            {
+                delete();
+            } catch (IOException ex)
+            {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     /**
@@ -253,6 +267,22 @@ public class Card extends StackPane
             alert.setTitle("ERROR");
             alert.setContentText("Configuration is only for neural network compilation. Perhaps you meant to edit?");
             alert.showAndWait();
+        }
+    }
+
+    public void delete() throws IOException
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Are you sure you want to delete the model?");
+        alert.setContentText("This action cannot be undone.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            ModelManager.models.remove(modelName);
+            ModelManager.cards.removeIf(card -> card.modelName.equals(modelName));
+            SceneManager.switchToMain();
         }
     }
 

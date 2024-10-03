@@ -66,7 +66,7 @@ public class DatasetHandler
     {
         if (dataset == null)
         {
-            return null;
+            return "\n\n";
         }
 
         String sb = "filepath = \"" + dataset.getAbsolutePath() + "\"\n";
